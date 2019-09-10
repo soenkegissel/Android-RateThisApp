@@ -52,7 +52,7 @@ public class RateThisApp {
     private boolean mOptOut;
 
     private Config sConfig;
-    private Callback sCallback = null;
+    private Callback sCallback;
 
     private FragmentActivity fragmentActivity;
 
