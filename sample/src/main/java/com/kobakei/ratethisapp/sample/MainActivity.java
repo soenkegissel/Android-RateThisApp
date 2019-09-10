@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         //The criteria needs to match the operator. Need to be 1 day AND 4 launches.
         Config config = new Config(1,4, Config.Operator.AND);
         config.setCancelMode(Config.CANCEL_MODE_NONE);
-        config.setMessage(R.string.empty);
 
         config = new Config();
 
