@@ -56,11 +56,6 @@ public class RateThisApp {
 
     private FragmentActivity fragmentActivity;
 
-
-    public RateThisApp(FragmentActivity activity) {
-        this.fragmentActivity = activity;
-    }
-
     public RateThisApp(FragmentActivity activity, Config config) {
         this.fragmentActivity = activity;
         this.sConfig = config;
@@ -126,7 +121,10 @@ public class RateThisApp {
      * @return true if shown, false otherwise.
      */
     public boolean showRateDialogIfNeeded(int themeId, boolean forceDialog) {
-        if (shouldShowRateDialog(sConfig.getmOperator()) || forceDialog) {
+        if(forceDialog) {
+            showRateDialog(fragmentActivity, themeId);
+            return true;
+        } else if (shouldShowRateDialog(sConfig.getmOperator())) {
             showRateDialog(fragmentActivity, themeId);
             return true;
         } else {

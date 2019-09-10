@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
         config.setCancelMode(Config.CANCEL_MODE_NONE);
         config.setMessage(R.string.empty);
 
+        config = new Config();
+
         rateThisApp = new RateThisApp(this, config);
 
         // Set callback (optional)
