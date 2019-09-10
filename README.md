@@ -36,7 +36,6 @@ protected void onCreate(Bundle savedInstanceState) {
 
     //The criteria needs to match the operator. Need to be 1 day AND 4 launches.
         Config config = new Config(1,4, Config.Operator.AND);
-        config.setMessage(R.string.empty);
 
         rateThisApp = new RateThisApp(this, config);
 
