@@ -20,7 +20,7 @@ This project implements a DialogFragment instead of a AlertDialog.
 
 ```groovy
 dependencies {
-    implementation 'com.github.soenkegissel:Android-RateThisApp:1.2.5'
+    implementation 'com.github.soenkegissel:Android-RateThisApp:1.2.7'
 }
 ```
 
