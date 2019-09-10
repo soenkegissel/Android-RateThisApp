@@ -16,11 +16,11 @@
 package com.kobakei.ratethisapp.sample;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.kobakei.ratethisapp.Config;
 import com.kobakei.ratethisapp.RateThisApp;
 
 /**
@@ -33,11 +33,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Set custom criteria (optional)
-        RateThisApp.init(new RateThisApp.Config(3, 5));
+
+        Config config = new Config(0,0);
+        config.setCancelMode(Config.CANCEL_MODE_NONE);
+
+
+        RateThisApp rateThisApp = new RateThisApp(this, config);
+        rateThisApp.setConfig(config);
+        rateThisApp.showRateDialogIfNeeded();
 
         // Set callback (optional)
-        RateThisApp.setCallback(new RateThisApp.Callback() {
+        rateThisApp.setCallback(new RateThisApp.Callback() {
             @Override
             public void onYesClicked() {
                 Toast.makeText(MainActivity.this, "Yes event", Toast.LENGTH_SHORT).show();
@@ -53,45 +59,5 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Cancel event", Toast.LENGTH_SHORT).show();
             }
         });
-
-        /*
-        // Set custom title and message
-        RateThisApp.Config config = new RateThisApp.Config(3, 5);
-        config.setTitle(R.string.hello_world);
-        config.setMessage(R.string.hello_world);
-        RateThisApp.init(config);
-        */
-
-        Button button1 = (Button) findViewById(R.id.button1);
-        button1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Show rating dialog explicitly.
-                RateThisApp.showRateDialog(MainActivity.this);
-            }
-        });
-
-        Button button2 = (Button) findViewById(R.id.button2);
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Show rating dialog explicitly.
-                RateThisApp.showRateDialog(MainActivity.this, R.style.MyAlertDialogStyle2);
-            }
-        });
-
-        Button button3 = (Button) findViewById(R.id.button3);
-        button3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RateThisApp.stopRateDialog(MainActivity.this);
-            }
-        });
-
-        // Monitor launch times and interval from installation
-        RateThisApp.onCreate(this);
-        // Show a dialog if criteria is satisfied
-        RateThisApp.showRateDialogIfNeeded(this);
     }
-
 }
