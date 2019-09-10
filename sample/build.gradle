@@ -19,7 +19,7 @@ android {
 }
 
 dependencies {
-    compile project(':ratethisapp')
-    compile 'androidx.legacy:legacy-support-v4:1.0.0'
-    compile 'androidx.appcompat:appcompat:1.0.0'
+    implementation project(':ratethisapp')
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
 }
