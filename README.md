@@ -20,7 +20,7 @@ This project implements a DialogFragment instead of a AlertDialog.
 
 ```groovy
 dependencies {
-    implementation 'com.github.soenkegissel:Android-RateThisApp:1.2.7'
+    implementation 'com.github.soenkegissel:Android-RateThisApp:1.3.0'
 }
 ```
 
@@ -94,16 +94,14 @@ rateThisApp = new RateThisApp(this, config);
 
 ### Custom strings
 
-You can override title, message and button labels.
+You can override title, message and button labels in your values.xml.
 
 ```java
-Config config = new Config(); //Here again with default constructor and 7 days and 10 launches with OR operator.
-config.setTitle(R.string.my_own_title);
-config.setMessage(R.string.my_own_message);
-config.setYesButtonText(R.string.my_own_rate);
-config.setNoButtonText(R.string.my_own_thanks);
-config.setCancelButtonText(R.string.my_own_cancel);
-rateThisApp = new RateThisApp(this, config);
+    <string name="rta_dialog_title">My custom title</string>
+    <string name="rta_dialog_message">My custom message</string>
+    <string name="rta_dialog_ok">Rate me</string>
+    <string name="rta_dialog_cancel">Later</string>
+    <string name="rta_dialog_no">No, dude</string>
 ```
 
 ### Custom url

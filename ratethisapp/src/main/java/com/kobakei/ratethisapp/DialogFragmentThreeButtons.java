@@ -40,17 +40,12 @@ public class DialogFragmentThreeButtons extends AppCompatDialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         int themeId = getArguments().getInt("themeId");
+
         sConfig = getArguments().getParcelable("config");
 
         builder = new AlertDialog.Builder(getContext(), themeId);
-
-        int titleId = sConfig.getmTitleId() != 0 ? sConfig.getmTitleId() : R.string.rta_dialog_title;
-        int messageId = sConfig.getmMessageId() != 0 ? sConfig.getmMessageId() : R.string.rta_dialog_message;
-        int cancelButtonID = sConfig.getmCancelButton() != 0 ? sConfig.getmCancelButton() : R.string.rta_dialog_cancel;
-        int thanksButtonID = sConfig.getmNoButtonId() != 0 ? sConfig.getmNoButtonId() : R.string.rta_dialog_no;
-        int rateButtonID = sConfig.getmYesButtonId() != 0 ? sConfig.getmYesButtonId() : R.string.rta_dialog_ok;
-        builder.setTitle(titleId);
-        builder.setMessage(messageId);
+        builder.setTitle(R.string.rta_dialog_title);
+        builder.setMessage(R.string.rta_dialog_message);
         switch (sConfig.getmCancelMode()) {
             case Config.CANCEL_MODE_BACK_KEY_OR_TOUCH_OUTSIDE:
                 setCancelable(true); // It's the default anyway
@@ -73,19 +68,19 @@ public class DialogFragmentThreeButtons extends AppCompatDialogFragment {
                 setCancelable(false);
                 break;
         }
-        builder.setPositiveButton(rateButtonID, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.rta_dialog_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 sCallback.onYesClicked();
             }
         });
-        builder.setNeutralButton(cancelButtonID, new DialogInterface.OnClickListener() {
+        builder.setNeutralButton(R.string.rta_dialog_cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 sCallback.onCancelClicked();
             }
         });
-        builder.setNegativeButton(thanksButtonID, new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.rta_dialog_no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 sCallback.onNoClicked();

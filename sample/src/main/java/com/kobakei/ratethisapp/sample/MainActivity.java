@@ -38,10 +38,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //The criteria needs to match the operator. Need to be 1 day AND 4 launches.
-        Config config = new Config(1,4, Config.Operator.AND);
+        Config config = new Config(2,5, Config.Operator.AND);
         config.setCancelMode(Config.CANCEL_MODE_NONE);
-
-        config = new Config();
 
         rateThisApp = new RateThisApp(this, config);
 
