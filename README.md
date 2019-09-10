@@ -1,11 +1,7 @@
-Android-RateThisApp
+Android-RateThisApp - ENHANCED
 ===================
 
-[![Build Status](https://circleci.com/gh/kobakei/Android-RateThisApp.svg?style=shield)](https://circleci.com/gh/kobakei/Android-RateThisApp/tree/master)
-[![Download](https://api.bintray.com/packages/kobakei/maven/ratethisapp/images/download.svg) ](https://bintray.com/kobakei/maven/ratethisapp/_latestVersion)
-[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Android--RateThisApp-green.svg?style=true)](https://android-arsenal.com/details/1/2893)
-
-Android-RateThisApp is an library to show "Rate this app" dialog.
+Android-RateThisApp is an library to show "Rate this app" dialog ENHANCED.
 
 ![Screen shot](https://raw.github.com/kobakei/Android-RateThisApp/master/screenshot_resized.png)
 
@@ -16,34 +12,52 @@ The library monitors the following status
 
 and show a dialog to engage users to rate the app in Google Play.
 
+This project implements a DialogFragment instead of a AlertDialog.
+
 ## Getting Started
 
 ### Dependency
 
 ```groovy
 dependencies {
-    compile 'io.github.kobakei:ratethisapp:x.y.z'
+    implementation 'com.github.soenkegissel:Android-RateThisApp:1.2.5'
 }
 ```
 
-x.y.z is [ ![Download](https://api.bintray.com/packages/kobakei/maven/ratethisapp/images/download.svg) ](https://bintray.com/kobakei/maven/ratethisapp/_latestVersion)
-
-**NOTICE**: From 1.0.0, group ID has been changed from `com.kobakei` to `io.github.kobakei`.
-
 ### Basic usage
 
-Call `RateThisApp.onCreate(Context)` and `RateThisApp.showRateDialogIfNeeded(Context)` in your launcher activity's onCreate() method.
-
 ```java
+private RateThisApp rateThisApp;
+
 @Override
 protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    // Monitor launch times and interval from installation
-    RateThisApp.onCreate(this);
-    // If the condition is satisfied, "Rate this app" dialog will be shown
-    RateThisApp.showRateDialogIfNeeded(this);
+    //The criteria needs to match the operator. Need to be 1 day AND 4 launches.
+        Config config = new Config(1,4, Config.Operator.AND);
+
+        rateThisApp = new RateThisApp(this, config);
+
+        // Set callback (optional)
+        rateThisApp.setCallback(new RateThisApp.Callback() {
+            @Override
+            public void onYesClicked() {
+                Toast.makeText(MainActivity.this, "Yes event", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNoClicked() {
+                Toast.makeText(MainActivity.this, "No event", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelClicked() {
+                Toast.makeText(MainActivity.this, "Cancel event", Toast.LENGTH_SHORT).show();
+            }
+        });
+        
+        rateThisApp.showRateDialogIfNeeded(false);
 }
 ```
 
@@ -51,19 +65,31 @@ That's all! You can see "Rate this app" dialog at an appropriate timing.
 
 ## Advanced usages
 
+### Show if conditions met
+```java
+rateThisApp.showRateDialogIfNeeded(false);
+```
+### Force dialog to show
+```java
+rateThisApp.showRateDialogIfNeeded(true);
+```
+### Custom style
+```java
+rateThisApp.showRateDialogIfNeeded(R.style.MyAlertDialogStyle2, false);
+```
 ### Custom condition
 
-In default, the dialog will be shown when **any of** the following conditions is satisfied.
+In default, the dialog will be shown when **any off** (usage of Operator.OR) or **all off** (usage of Operator.AND) the following conditions is satisfied.
 
 * App is launched more than 10 times
 * App is launched more than 7 days later than installation.
 
-If you want to use your own condition, please call `RateThisApp.init(Configuration)` in your Application or launcher activity onCreate method.
+If you want to use your own condition, please call `Config config = new Config(3,5, Config.Operator.AND)` in your Application or launcher activity onCreate method.
 
 ```java
-// Custom condition: 3 days and 5 launches
-RateThisApp.Config config = new RateThisApp.Config(3, 5);
-RateThisApp.init(config);
+// Custom condition: 3 days and 5 launches. Both of which must be satisfied.
+Config config = new Config(3,5, Config.Operator.AND);
+rateThisApp = new RateThisApp(this, config);
 ```
 
 ### Custom strings
@@ -71,13 +97,13 @@ RateThisApp.init(config);
 You can override title, message and button labels.
 
 ```java
-RateThisApp.Config config = new RateThisApp.Config();
+Config config = new Config(); //Here again with default constructor and 7 days and 10 launches with OR operator.
 config.setTitle(R.string.my_own_title);
 config.setMessage(R.string.my_own_message);
 config.setYesButtonText(R.string.my_own_rate);
 config.setNoButtonText(R.string.my_own_thanks);
 config.setCancelButtonText(R.string.my_own_cancel);
-RateThisApp.init(config);
+rateThisApp = new RateThisApp(this, config);
 ```
 
 ### Custom url
@@ -85,9 +111,9 @@ RateThisApp.init(config);
 In default, rate button navigates to the application page on Google Play. You can override this url as below.
 
 ```java
-RateThisApp.Config config = new RateThisApp.Config();
+Config config = new Config();
 config.setUrl("http://www.example.com");
-RateThisApp.init(config);
+rateThisApp = new RateThisApp(this, config);
 ```
 
 ### Opt out from your code
@@ -95,7 +121,7 @@ RateThisApp.init(config);
 If you want to stop showing the rate dialog, use this method in your code.
 
 ```java
-RateThisApp.stopRateDialog(this);
+rateThisApp.stopRateDialog();
 ```
 
 ### Callback
@@ -103,7 +129,7 @@ RateThisApp.stopRateDialog(this);
 You can receive yes/no/cancel button click events.
 
 ```java
-RateThisApp.setCallback(new RateThisApp.Callback() {
+rateThisApp.setCallback(new RateThisApp.Callback() {
     @Override
     public void onYesClicked() {
         Toast.makeText(MainActivity.this, "Yes event", Toast.LENGTH_SHORT).show();
@@ -130,6 +156,8 @@ In present, I need contributors who can translate resources from English/Japanes
 
 ```
 Copyright 2013-2017 Keisuke Kobayashi
+and
+Copyright 2019 Sönke Gissel
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -146,4 +174,4 @@ limitations under the License.
 
 ## Author
 
-Keisuke Kobayashi - kobakei122@gmail.com
+Sönke Gissel
