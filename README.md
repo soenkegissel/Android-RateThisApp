@@ -56,6 +56,8 @@ protected void onCreate(Bundle savedInstanceState) {
                 Toast.makeText(MainActivity.this, "Cancel event", Toast.LENGTH_SHORT).show();
             }
         });
+        
+        rateThisApp.showRateDialogIfNeeded(false);
 }
 ```
 
@@ -63,6 +65,18 @@ That's all! You can see "Rate this app" dialog at an appropriate timing.
 
 ## Advanced usages
 
+### Show if conditions met
+```java
+rateThisApp.showRateDialogIfNeeded(false);
+```
+### Force dialog to show
+```java
+rateThisApp.showRateDialogIfNeeded(true);
+```
+### Custom style
+```java
+rateThisApp.showRateDialogIfNeeded(R.style.MyAlertDialogStyle2, false);
+```
 ### Custom condition
 
 In default, the dialog will be shown when **any off** (usage of Operator.OR) or **all off** (usage of Operator.AND) the following conditions is satisfied.
