@@ -46,12 +46,12 @@ public class RateThisApp {
     private static final String KEY_OPT_OUT = "rta_opt_out";
     private static final String KEY_ASK_LATER_DATE = "rta_ask_later_date";
 
-    private Date mInstallDate = new Date();
-    private int mLaunchTimes = 0;
-    private boolean mOptOut = false;
-    private Date mAskLaterDate = new Date();
+    private Date mInstallDate;
+    private Date mAskLaterDate;
+    private int mLaunchTimes;
+    private boolean mOptOut;
 
-    private Config sConfig = new Config();
+    private Config sConfig;
     private Callback sCallback = null;
 
     private FragmentActivity fragmentActivity;
@@ -100,7 +100,6 @@ public class RateThisApp {
         int launchTimes = pref.getInt(KEY_LAUNCH_TIMES, 0);
         launchTimes++;
         editor.putInt(KEY_LAUNCH_TIMES, launchTimes);
-        log("Launch times; " + launchTimes);
 
         editor.apply();
 
