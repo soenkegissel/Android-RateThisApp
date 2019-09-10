@@ -24,6 +24,6 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/stop_rate_dialog"
+        android:text="@string/only_if_criteria_match_rate_dialog"
         android:id="@+id/button3" />
 </LinearLayout>

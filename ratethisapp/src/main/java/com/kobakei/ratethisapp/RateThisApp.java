@@ -16,11 +16,13 @@
 package com.kobakei.ratethisapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
+import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.fragment.app.FragmentActivity;
@@ -54,6 +56,11 @@ public class RateThisApp {
 
     private FragmentActivity fragmentActivity;
 
+
+    public RateThisApp(FragmentActivity activity) {
+        this.fragmentActivity = activity;
+    }
+
     public RateThisApp(FragmentActivity activity, Config config) {
         this.fragmentActivity = activity;
         this.sConfig = config;
@@ -80,7 +87,7 @@ public class RateThisApp {
 
     /**
      * Call this API when the launcher activity is launched.<br>
-     * It is better to call this API in onCreate() of the launcher activity.
+     * It is best to call this API in onCreate() of the launcher activity.
      */
     private void setup() {
         SharedPreferences pref = fragmentActivity.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
@@ -102,20 +109,16 @@ public class RateThisApp {
         mOptOut = pref.getBoolean(KEY_OPT_OUT, false);
         mAskLaterDate = new Date(pref.getLong(KEY_ASK_LATER_DATE, 0));
 
-        printStatus(fragmentActivity);
+        if(BuildConfig.DEBUG)
+            printStatus();
     }
 
     /**
      * Show the rate dialog if the criteria is satisfied.
      * @return true if shown, false otherwise.
      */
-    public boolean showRateDialogIfNeeded() {
-        if (shouldShowRateDialog()) {
-            showRateDialog(fragmentActivity);
-            return true;
-        } else {
-            return false;
-        }
+    public boolean showRateDialogIfNeeded(boolean forceDialog) {
+        return showRateDialogIfNeeded(0, forceDialog);
     }
 
     /**
@@ -123,8 +126,8 @@ public class RateThisApp {
      * @param themeId Theme ID
      * @return true if shown, false otherwise.
      */
-    public boolean showRateDialogIfNeeded(int themeId) {
-        if (shouldShowRateDialog()) {
+    public boolean showRateDialogIfNeeded(int themeId, boolean forceDialog) {
+        if (shouldShowRateDialog(sConfig.getmOperator()) || forceDialog) {
             showRateDialog(fragmentActivity, themeId);
             return true;
         } else {
@@ -137,31 +140,24 @@ public class RateThisApp {
      * Developers may call this method directly if they want to show their own view instead of
      * dialog provided by this library.
      * @return
+     * @param operator
+     * GISSEL Add an Operator enum ADD/OR for launchTimes and launchDate.
      */
-    private boolean shouldShowRateDialog() {
+    private boolean shouldShowRateDialog(Config.Operator operator) {
         if (mOptOut) {
             return false;
         } else {
-            if (mLaunchTimes >= sConfig.getmCriteriaLaunchTimes()) {
-                return true;
-            }
+            boolean launchTimes = mLaunchTimes >= sConfig.getmCriteriaLaunchTimes();
             long threshold = TimeUnit.DAYS.toMillis(sConfig.getmCriteriaInstallDays());   // msec
-            if (new Date().getTime() - mInstallDate.getTime() >= threshold &&
-                new Date().getTime() - mAskLaterDate.getTime() >= threshold) {
-                return true;
-            }
-            return false;
+            boolean launchDate =
+                    new Date().getTime() - mInstallDate.getTime() >= threshold &&
+                    new Date().getTime() - mAskLaterDate.getTime() >= threshold;
+            log("launchTimes: "+launchTimes+". launchDate: "+launchDate);
+            if (operator.equals(Config.Operator.OR)) {
+                return launchTimes || launchDate;
+            } else
+                return launchTimes && launchDate;
         }
-    }
-
-    /**
-     * Show the rate dialog
-     * @param activity
-     */
-    private void showRateDialog(final FragmentActivity activity) {
-        DialogFragmentThreeButtons newFragment = DialogFragmentThreeButtons.newInstance(
-                sConfig, 0);
-        newFragment.show(activity.getSupportFragmentManager(), "dialog");
     }
 
     /**
@@ -172,8 +168,46 @@ public class RateThisApp {
     private void showRateDialog(final FragmentActivity activity, int themeId) {
         DialogFragmentThreeButtons newFragment = DialogFragmentThreeButtons.newInstance(
                 sConfig, themeId);
+        newFragment.setCallback(callback);
         newFragment.show(activity.getSupportFragmentManager(), "dialog");
     }
+
+    private Callback callback = new Callback() {
+        @Override
+        public void onYesClicked() {
+            if (sCallback != null) {
+                sCallback.onYesClicked();
+            }
+            String appPackage = fragmentActivity.getPackageName();
+            String url = "market://details?id=" + appPackage;
+            if (!TextUtils.isEmpty(sConfig.getmUrl())) {
+                url = sConfig.getmUrl();
+            }
+            try {
+                fragmentActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+            } catch (android.content.ActivityNotFoundException anfe) {
+                fragmentActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + fragmentActivity.getPackageName())));
+            }
+            setOptOut(true);
+        }
+
+        @Override
+        public void onNoClicked() {
+            if (sCallback != null) {
+                sCallback.onNoClicked();
+            }
+            setOptOut(true);
+        }
+
+        @Override
+        public void onCancelClicked() {
+            if (sCallback != null) {
+                sCallback.onCancelClicked();
+            }
+            clearSharedPreferences();
+            storeAskLaterDate(fragmentActivity);
+        }
+    };
 
     /**
      * Stop showing the rate dialog
@@ -190,17 +224,6 @@ public class RateThisApp {
         SharedPreferences pref = fragmentActivity.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         return pref.getInt(KEY_LAUNCH_TIMES, 0);
     }
-
-    private void doPositiveClick() {
-        // Do stuff here.
-        Log.i("FragmentAlertDialog", "Positive click!");
-    }
-
-    private void doNegativeClick() {
-        // Do stuff here.
-        Log.i("FragmentAlertDialog", "Negative click!");
-    }
-
 
     /**
      * Clear data in shared preferences.<br>
@@ -236,14 +259,12 @@ public class RateThisApp {
      */
     private void storeInstallDate(final Context context, SharedPreferences.Editor editor) {
         Date installDate = new Date();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-            PackageManager packMan = context.getPackageManager();
-            try {
-                PackageInfo pkgInfo = packMan.getPackageInfo(context.getPackageName(), 0);
-                installDate = new Date(pkgInfo.firstInstallTime);
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            }
+        PackageManager packMan = context.getPackageManager();
+        try {
+            PackageInfo pkgInfo = packMan.getPackageInfo(context.getPackageName(), 0);
+            installDate = new Date(pkgInfo.firstInstallTime);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
         }
         editor.putLong(KEY_INSTALL_DATE, installDate.getTime());
         log("First install: " + installDate.toString());
@@ -262,14 +283,15 @@ public class RateThisApp {
 
     /**
      * Print values in SharedPreferences (used for debug)
-     * @param context
      */
-    private void printStatus(final Context context) {
-        SharedPreferences pref = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+    public void printStatus() {
+        SharedPreferences pref = fragmentActivity.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         log("*** RateThisApp Status ***");
-        log("Install Date: " + new Date(pref.getLong(KEY_INSTALL_DATE, 0)));
-        log("Launch Times: " + pref.getInt(KEY_LAUNCH_TIMES, 0));
+        log("Install Date: " + new Date(pref.getLong(KEY_INSTALL_DATE, 0))+". Needed: "+sConfig.getmCriteriaInstallDays());
+        log("Launch Times: " + pref.getInt(KEY_LAUNCH_TIMES, 0)+". Needed: "+sConfig.getmCriteriaLaunchTimes());
+        log("Install Date & Launch Times Operator: "+sConfig.getmOperator());
         log("Opt out: " + pref.getBoolean(KEY_OPT_OUT, false));
+        log("Criteria match? "+shouldShowRateDialog(sConfig.getmOperator()));
     }
 
     /**

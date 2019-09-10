@@ -17,13 +17,24 @@ public class DialogFragmentThreeButtons extends AppCompatDialogFragment {
     private AlertDialog.Builder builder;
     private Config sConfig;
 
-    public static DialogFragmentThreeButtons newInstance(Parcelable config, int themeId) {
+    private RateThisApp.Callback sCallback;
+
+    static DialogFragmentThreeButtons newInstance(Parcelable config, int themeId) {
         DialogFragmentThreeButtons frag = new DialogFragmentThreeButtons();
         Bundle args = new Bundle();
         args.putParcelable("config", config);
         args.putInt("themeId", themeId);
         frag.setArguments(args);
         return frag;
+    }
+
+    /**
+     * Set callback instance.
+     * The callback will receive yes/no/later events.
+     * @param callback
+     */
+    void setCallback(RateThisApp.Callback callback) {
+        sCallback = callback;
     }
 
     @Override
@@ -65,49 +76,25 @@ public class DialogFragmentThreeButtons extends AppCompatDialogFragment {
         builder.setPositiveButton(rateButtonID, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                /*if (sCallback != null) {
-                    sCallback.onYesClicked();
-                }
-                String appPackage = getContext().getPackageName();
-                String url = "market://details?id=" + appPackage;
-                if (!TextUtils.isEmpty(sConfig.getmUrl())) {
-                    url = sConfig.getmUrl();
-                }
-                try {
-                    getContext().getPackageName.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-                } catch (android.content.ActivityNotFoundException anfe) {
-                    getContext().getPackageName.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + context.getPackageName())));
-                }
-                setOptOut(context, true);*/
+                sCallback.onYesClicked();
             }
         });
         builder.setNeutralButton(cancelButtonID, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                /*if (sCallback != null) {
-                    sCallback.onCancelClicked();
-                }
-                clearSharedPreferences(context);
-                storeAskLaterDate(context);*/
+                sCallback.onCancelClicked();
             }
         });
         builder.setNegativeButton(thanksButtonID, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                /*if (sCallback != null) {
-                    sCallback.onNoClicked();
-                }
-                setOptOut(context, true);*/
+                sCallback.onNoClicked();
             }
         });
         builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                /*if (sCallback != null) {
-                    sCallback.onCancelClicked();
-                }
-                clearSharedPreferences(context);
-                storeAskLaterDate(context);*/
+                sCallback.onCancelClicked();
             }
         });
         return builder.create();

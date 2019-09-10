@@ -16,6 +16,8 @@
 package com.kobakei.ratethisapp.sample;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,19 +30,19 @@ import com.kobakei.ratethisapp.RateThisApp;
  */
 public class MainActivity extends AppCompatActivity {
 
+    private RateThisApp rateThisApp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        Config config = new Config(0,0);
+        //The criteria needs to match the operator. Need to be 1 day AND 4 launches.
+        Config config = new Config(1,4, Config.Operator.AND);
         config.setCancelMode(Config.CANCEL_MODE_NONE);
+        config.setMessage(R.string.empty);
 
-
-        RateThisApp rateThisApp = new RateThisApp(this, config);
-        rateThisApp.setConfig(config);
-        rateThisApp.showRateDialogIfNeeded();
+        rateThisApp = new RateThisApp(this, config);
 
         // Set callback (optional)
         rateThisApp.setCallback(new RateThisApp.Callback() {
@@ -57,6 +59,33 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCancelClicked() {
                 Toast.makeText(MainActivity.this, "Cancel event", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        Button button1 = (Button) findViewById(R.id.button1);
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Show rating dialog explicitly.
+                rateThisApp.showRateDialogIfNeeded(true);
+            }
+        });
+
+        Button button2 = (Button) findViewById(R.id.button2);
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Show rating dialog explicitly.
+                rateThisApp.showRateDialogIfNeeded(R.style.MyAlertDialogStyle2, true);
+            }
+        });
+
+        Button button3 = (Button) findViewById(R.id.button3);
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rateThisApp.showRateDialogIfNeeded(false);
             }
         });
     }

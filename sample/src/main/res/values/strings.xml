@@ -4,6 +4,5 @@
     <string name="app_name">RTASample</string>
     <string name="show_dialog_with_default_style">Show dialog with default style</string>
     <string name="show_dialog_with_custom_style">Show dialog with custom style</string>
-    <string name="stop_rate_dialog">Stop rate dialog</string>
-
+    <string name="only_if_criteria_match_rate_dialog">Show dialog if criteria match</string>
 </resources>

@@ -17,6 +17,11 @@ public class Config implements Parcelable {
     public static final int CANCEL_MODE_BACK_KEY                  = 1;
     public static final int CANCEL_MODE_NONE                      = 2;
 
+    public enum Operator {
+        AND,
+        OR;
+    }
+
     private String mUrl = null;
 
     private int mCriteriaInstallDays;
@@ -27,12 +32,13 @@ public class Config implements Parcelable {
     private int mNoButtonId = 0;
     private int mCancelButton = 0;
     private int mCancelMode = CANCEL_MODE_BACK_KEY_OR_TOUCH_OUTSIDE;
+    private Operator mOperator = Operator.OR;
 
     /**
      * Constructor with default criteria.
      */
     public Config() {
-        this(7, 10);
+        this(7, 10, Operator.OR);
     }
 
     /**
@@ -40,9 +46,10 @@ public class Config implements Parcelable {
      * @param criteriaInstallDays
      * @param criteriaLaunchTimes
      */
-    public Config(int criteriaInstallDays, int criteriaLaunchTimes) {
+    public Config(int criteriaInstallDays, int criteriaLaunchTimes, Operator operator) {
         this.mCriteriaInstallDays = criteriaInstallDays;
         this.mCriteriaLaunchTimes = criteriaLaunchTimes;
+        this.mOperator = operator;
     }
 
     /**
@@ -137,6 +144,10 @@ public class Config implements Parcelable {
 
     public String getmUrl() {
         return mUrl;
+    }
+
+    public Operator getmOperator() {
+        return mOperator;
     }
 
     // Parcelling part
