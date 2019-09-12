@@ -15,6 +15,7 @@
  */
 package com.kobakei.ratethisapp;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,6 +28,7 @@ import android.util.Log;
 
 import androidx.fragment.app.FragmentActivity;
 
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -38,7 +40,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class RateThisApp {
 
-    private final String TAG = RateThisApp.class.getSimpleName();
+    private static final String TAG = RateThisApp.class.getSimpleName();
 
     private static final String PREF_NAME = "RateThisApp";
     private static final String KEY_INSTALL_DATE = "rta_install_date";
@@ -55,24 +57,45 @@ public class RateThisApp {
     private Callback sCallback;
 
     private FragmentActivity fragmentActivity;
+    private Context mContext;
 
-    public RateThisApp(FragmentActivity activity, Config config) {
-        this.fragmentActivity = activity;
+    //https://de.wikibooks.org/wiki/Muster:_Java:_Singleton
+    @SuppressLint("StaticFieldLeak")
+    private static volatile RateThisApp INSTANCE;
+
+    public static RateThisApp initialize(Context context, Config config) {
+        Context applicationContext;
+        if (context.getApplicationContext() == null) {
+            applicationContext = context;
+        } else {
+            applicationContext = context.getApplicationContext();
+        }
+        return INSTANCE = new RateThisApp(applicationContext, config);
+    }
+
+    public static RateThisApp initialize(Context context) {
+        Log.w(TAG, "RateThisApp initialized without a custom configuration. Will use default values.");
+        return initialize(context, new Config(7, 10, Config.Operator.OR));
+    }
+
+    public static RateThisApp getInstance(FragmentActivity fragmentActivity) {
+        if(INSTANCE == null) {
+            throw new NullPointerException("RateThisApp not initialized. Call RateThisApp.initalize(Context, Config) from your application class.");
+        }
+        INSTANCE.fragmentActivity = fragmentActivity;
+
+        return RateThisApp.INSTANCE;
+    }
+
+    private RateThisApp(Context context, Config config) {
+        this.mContext = context;
         this.sConfig = config;
 
         setup();
     }
 
     /**
-     * Initialize RateThisApp configuration.
-     * @param config Configuration object.
-     */
-    public void setConfig(Config config) {
-        sConfig = config;
-    }
-
-    /**
-     * Set callback instance.
+     * Set callback INSTANCE.
      * The callback will receive yes/no/later events.
      * @param callback
      */
@@ -85,11 +108,11 @@ public class RateThisApp {
      * It is best to call this API in onCreate() of the launcher activity.
      */
     private void setup() {
-        SharedPreferences pref = fragmentActivity.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences pref = mContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         Editor editor = pref.edit();
         // If it is the first launch, save the date in shared preference.
         if (pref.getLong(KEY_INSTALL_DATE, 0) == 0L) {
-            storeInstallDate(fragmentActivity, editor);
+            storeInstallDate(editor);
         }
         // Increment launch times
         int launchTimes = pref.getInt(KEY_LAUNCH_TIMES, 0);
@@ -98,13 +121,17 @@ public class RateThisApp {
 
         editor.apply();
 
+        setObjects(pref);
+
+        if(BuildConfig.DEBUG)
+            printStatus();
+    }
+
+    private void setObjects(SharedPreferences pref) {
         mInstallDate = new Date(pref.getLong(KEY_INSTALL_DATE, 0));
         mLaunchTimes = pref.getInt(KEY_LAUNCH_TIMES, 0);
         mOptOut = pref.getBoolean(KEY_OPT_OUT, false);
         mAskLaterDate = new Date(pref.getLong(KEY_ASK_LATER_DATE, 0));
-
-        if(BuildConfig.DEBUG)
-            printStatus();
     }
 
     /**
@@ -163,7 +190,7 @@ public class RateThisApp {
      * @param themeId
      */
     private void showRateDialog(final FragmentActivity activity, int themeId) {
-        DialogFragmentThreeButtons newFragment = DialogFragmentThreeButtons.newInstance(
+        DialogFragment newFragment = DialogFragment.newInstance(
                 sConfig, themeId);
         newFragment.setCallback(callback);
         newFragment.show(activity.getSupportFragmentManager(), "dialog");
@@ -202,7 +229,7 @@ public class RateThisApp {
                 sCallback.onCancelClicked();
             }
             clearSharedPreferences();
-            storeAskLaterDate(fragmentActivity);
+            storeAskLaterDate();
         }
     };
 
@@ -218,8 +245,12 @@ public class RateThisApp {
      * @return
      */
     public int getLaunchCount(){
-        SharedPreferences pref = fragmentActivity.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences pref = mContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         return pref.getInt(KEY_LAUNCH_TIMES, 0);
+    }
+
+    public Config getConfig() {
+        return sConfig;
     }
 
     /**
@@ -227,11 +258,13 @@ public class RateThisApp {
      * This API is called when the "Later" is pressed or canceled.
      */
     private void clearSharedPreferences() {
-        SharedPreferences pref = fragmentActivity.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences pref = mContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         Editor editor = pref.edit();
         editor.remove(KEY_INSTALL_DATE);
         editor.remove(KEY_LAUNCH_TIMES);
-        editor.apply();
+
+        if(editor.commit())
+            setObjects(pref);
     }
 
     /**
@@ -241,7 +274,7 @@ public class RateThisApp {
      * @param optOut
      */
     private void setOptOut(boolean optOut) {
-        SharedPreferences pref = fragmentActivity.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences pref = mContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         Editor editor = pref.edit();
         editor.putBoolean(KEY_OPT_OUT, optOut);
         editor.apply();
@@ -251,28 +284,25 @@ public class RateThisApp {
     /**
      * Store install date.
      * Install date is retrieved from package manager if possible.
-     * @param context
      * @param editor
      */
-    private void storeInstallDate(final Context context, SharedPreferences.Editor editor) {
+    private void storeInstallDate(SharedPreferences.Editor editor) {
         Date installDate = new Date();
-        PackageManager packMan = context.getPackageManager();
+        PackageManager packMan = mContext.getPackageManager();
         try {
-            PackageInfo pkgInfo = packMan.getPackageInfo(context.getPackageName(), 0);
+            PackageInfo pkgInfo = packMan.getPackageInfo(mContext.getPackageName(), 0);
             installDate = new Date(pkgInfo.firstInstallTime);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
         editor.putLong(KEY_INSTALL_DATE, installDate.getTime());
-        log("First install: " + installDate.toString());
     }
 
     /**
      * Store the date the user asked for being asked again later.
-     * @param context
      */
-    private void storeAskLaterDate(final Context context) {
-        SharedPreferences pref = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+    private void storeAskLaterDate() {
+        SharedPreferences pref = mContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         Editor editor = pref.edit();
         editor.putLong(KEY_ASK_LATER_DATE, System.currentTimeMillis());
         editor.apply();
@@ -281,10 +311,11 @@ public class RateThisApp {
     /**
      * Print values in SharedPreferences (used for debug)
      */
-    public void printStatus() {
-        SharedPreferences pref = fragmentActivity.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+    private void printStatus() {
+        SharedPreferences pref = mContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         log("*** RateThisApp Status ***");
         log("Install Date: " + new Date(pref.getLong(KEY_INSTALL_DATE, 0))+". Needed: "+sConfig.getmCriteriaInstallDays());
+        log("Ask Later Date: " + new Date(pref.getLong(KEY_ASK_LATER_DATE, 0)));
         log("Launch Times: " + pref.getInt(KEY_LAUNCH_TIMES, 0)+". Needed: "+sConfig.getmCriteriaLaunchTimes());
         log("Install Date & Launch Times Operator: "+sConfig.getmOperator());
         log("Opt out: " + pref.getBoolean(KEY_OPT_OUT, false));

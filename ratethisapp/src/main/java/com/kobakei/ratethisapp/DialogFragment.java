@@ -12,15 +12,15 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 /**
  * Created by Sönke Gissel on 10.09.2019.
  */
-public class DialogFragmentThreeButtons extends AppCompatDialogFragment {
+public class DialogFragment extends AppCompatDialogFragment {
 
     private AlertDialog.Builder builder;
     private Config sConfig;
 
     private RateThisApp.Callback sCallback;
 
-    static DialogFragmentThreeButtons newInstance(Parcelable config, int themeId) {
-        DialogFragmentThreeButtons frag = new DialogFragmentThreeButtons();
+    static DialogFragment newInstance(Parcelable config, int themeId) {
+        DialogFragment frag = new DialogFragment();
         Bundle args = new Bundle();
         args.putParcelable("config", config);
         args.putInt("themeId", themeId);

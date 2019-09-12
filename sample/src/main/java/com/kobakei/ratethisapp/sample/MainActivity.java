@@ -30,21 +30,16 @@ import com.kobakei.ratethisapp.RateThisApp;
  */
 public class MainActivity extends AppCompatActivity {
 
-    private RateThisApp rateThisApp;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         //The criteria needs to match the operator. Need to be 1 day AND 4 launches.
-        Config config = new Config(2,5, Config.Operator.AND);
-        config.setCancelMode(Config.CANCEL_MODE_NONE);
-
-        rateThisApp = new RateThisApp(this, config);
+        RateThisApp.getInstance(this).getConfig().setCancelMode(Config.CANCEL_MODE_NONE);
 
         // Set callback (optional)
-        rateThisApp.setCallback(new RateThisApp.Callback() {
+        RateThisApp.getInstance(this).setCallback(new RateThisApp.Callback() {
             @Override
             public void onYesClicked() {
                 Toast.makeText(MainActivity.this, "Yes event", Toast.LENGTH_SHORT).show();
@@ -61,13 +56,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         Button button1 = (Button) findViewById(R.id.button1);
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Show rating dialog explicitly.
-                rateThisApp.showRateDialogIfNeeded(true);
+                RateThisApp.getInstance(MainActivity.this).showRateDialogIfNeeded(true);
             }
         });
 
@@ -76,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Show rating dialog explicitly.
-                rateThisApp.showRateDialogIfNeeded(R.style.MyAlertDialogStyle2, true);
+                RateThisApp.getInstance(MainActivity.this).showRateDialogIfNeeded(R.style.MyAlertDialogStyle2, true);
             }
         });
 
@@ -84,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                rateThisApp.showRateDialogIfNeeded(false);
+                RateThisApp.getInstance(MainActivity.this).showRateDialogIfNeeded(false);
             }
         });
     }

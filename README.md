@@ -20,44 +20,36 @@ This project implements a DialogFragment instead of a AlertDialog.
 
 ```groovy
 dependencies {
-    implementation 'com.github.soenkegissel:Android-RateThisApp:1.3.0'
+    implementation 'com.github.soenkegissel:Android-RateThisApp:1.4.0'
 }
 ```
 
-### Basic usage
+## Basic usage
+
+### Application class
+
+Initialize RateThisApp on Application start. 
+```java
+public class MainApplication extends Application {
+    
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        
+        RateThisApp.initialize(this);
+    }
+}
+```
+
+### Activity class
+
+The most simple setup is to show the dialog if conditions match.
 
 ```java
-private RateThisApp rateThisApp;
 
 @Override
-protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
-
-    //The criteria needs to match the operator. Need to be 1 day AND 4 launches.
-        Config config = new Config(1,4, Config.Operator.AND);
-
-        rateThisApp = new RateThisApp(this, config);
-
-        // Set callback (optional)
-        rateThisApp.setCallback(new RateThisApp.Callback() {
-            @Override
-            public void onYesClicked() {
-                Toast.makeText(MainActivity.this, "Yes event", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNoClicked() {
-                Toast.makeText(MainActivity.this, "No event", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancelClicked() {
-                Toast.makeText(MainActivity.this, "Cancel event", Toast.LENGTH_SHORT).show();
-            }
-        });
-        
-        rateThisApp.showRateDialogIfNeeded(false);
+private void ratingMethod() {
+    RateThisApp.getInstance(this).showRateDialogIfNeeded(false);
 }
 ```
 
@@ -67,29 +59,42 @@ That's all! You can see "Rate this app" dialog at an appropriate timing.
 
 ### Show if conditions met
 ```java
-rateThisApp.showRateDialogIfNeeded(false);
+RateThisApp.getInstance(this).showRateDialogIfNeeded(false);
 ```
+
 ### Force dialog to show
 ```java
-rateThisApp.showRateDialogIfNeeded(true);
+RateThisApp.getInstance(this).showRateDialogIfNeeded(true);
 ```
+
 ### Custom style
 ```java
-rateThisApp.showRateDialogIfNeeded(R.style.MyAlertDialogStyle2, false);
+RateThisApp.getInstance(this).showRateDialogIfNeeded(R.style.MyAlertDialogStyle2, false);
 ```
+
 ### Custom condition
 
 In default, the dialog will be shown when **any off** (usage of Operator.OR) or **all off** (usage of Operator.AND) the following conditions is satisfied.
 
+* App is launched after 7 days than installation.
 * App is launched more than 10 times
-* App is launched more than 7 days later than installation.
 
-If you want to use your own condition, please call `Config config = new Config(3,5, Config.Operator.AND)` in your Application or launcher activity onCreate method.
+If you want to use your own condition, call `Config config = new Config(3,5, Config.Operator.AND)` 
+in your Application class method.
 
 ```java
+
+public class MainApplication extends Application {
+
 // Custom condition: 3 days and 5 launches. Both of which must be satisfied.
-Config config = new Config(3,5, Config.Operator.AND);
-rateThisApp = new RateThisApp(this, config);
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        
+        Config config = new Config(3, 5, Config.Operator.AND);
+        RateThisApp.initialize(this, config);
+    }
+}
 ```
 
 ### Custom strings
@@ -111,7 +116,6 @@ In default, rate button navigates to the application page on Google Play. You ca
 ```java
 Config config = new Config();
 config.setUrl("http://www.example.com");
-rateThisApp = new RateThisApp(this, config);
 ```
 
 ### Opt out from your code
@@ -119,7 +123,7 @@ rateThisApp = new RateThisApp(this, config);
 If you want to stop showing the rate dialog, use this method in your code.
 
 ```java
-rateThisApp.stopRateDialog();
+RateThisApp.getInstance(this).stopRateDialog();
 ```
 
 ### Callback
@@ -127,7 +131,7 @@ rateThisApp.stopRateDialog();
 You can receive yes/no/cancel button click events.
 
 ```java
-rateThisApp.setCallback(new RateThisApp.Callback() {
+RateThisApp.getInstance(this).setCallback(new RateThisApp.Callback() {
     @Override
     public void onYesClicked() {
         Toast.makeText(MainActivity.this, "Yes event", Toast.LENGTH_SHORT).show();
@@ -148,7 +152,7 @@ rateThisApp.setCallback(new RateThisApp.Callback() {
 ## Contribute this project
 
 If you want to contribute this project, please send pull request.
-In present, I need contributors who can translate resources from English/Japanese into other languages.
+In present, I need contributors who can translate resources from English/German into other languages.
 
 ## License
 
