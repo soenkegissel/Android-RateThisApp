@@ -28,7 +28,6 @@ import android.util.Log;
 
 import androidx.fragment.app.FragmentActivity;
 
-import java.text.DateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -171,12 +170,13 @@ public class RateThisApp {
         if (mOptOut) {
             return false;
         } else {
-            boolean launchTimes = mLaunchTimes >= sConfig.getmCriteriaLaunchTimes();
+            boolean launchTimes = getLaunchCount() >= sConfig.getmCriteriaLaunchTimes();
             long threshold = TimeUnit.DAYS.toMillis(sConfig.getmCriteriaInstallDays());   // msec
             boolean launchDate =
                     new Date().getTime() - mInstallDate.getTime() >= threshold &&
                     new Date().getTime() - mAskLaterDate.getTime() >= threshold;
             log("launchTimes: "+launchTimes+". launchDate: "+launchDate);
+
             if (operator.equals(Config.Operator.OR)) {
                 return launchTimes || launchDate;
             } else
@@ -242,11 +242,43 @@ public class RateThisApp {
 
     /**
      * Get count number of the rate dialog launches
-     * @return
+     * @return Time the app is launched
      */
     public int getLaunchCount(){
-        SharedPreferences pref = mContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-        return pref.getInt(KEY_LAUNCH_TIMES, 0);
+        return mLaunchTimes;
+    }
+    /**
+     * Get the number of times the app is launched more than needed<br />
+     * to show the rating dialog.
+     * @return Number of times launched more than needed to show dialog.
+     */
+    public int getLaunchCountOverexeedsBy() {
+        return getLaunchCount() - sConfig.getmCriteriaLaunchTimes();
+    }
+
+    /**
+     * Get the number of days the app is launched more than needed<br />
+     * to show the rating dialog.
+     * @return Number of days more than needed to show dialog.
+     */
+    public int getLaunchDaysOverexeedsBy(){
+        return Integer.parseInt(String.valueOf(TimeUnit.MILLISECONDS.toDays(new Date().getTime() - mInstallDate.getTime())-sConfig.getmCriteriaInstallDays()));
+    }
+
+    /**
+     * Did user opted out on the dialog.
+     * @return true if optOut, false if not optOut.
+     */
+    public boolean getOptOut() {
+        return mOptOut;
+    }
+
+    /**
+     * Was the dialog shown to the user.
+     * @return true if shown, false if not shown.
+     */
+    public boolean getDialogShown() {
+        return getOptOut();
     }
 
     public Config getConfig() {
@@ -314,12 +346,14 @@ public class RateThisApp {
     private void printStatus() {
         SharedPreferences pref = mContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         log("*** RateThisApp Status ***");
-        log("Install Date: " + new Date(pref.getLong(KEY_INSTALL_DATE, 0))+". Needed: "+sConfig.getmCriteriaInstallDays());
-        log("Ask Later Date: " + new Date(pref.getLong(KEY_ASK_LATER_DATE, 0)));
-        log("Launch Times: " + pref.getInt(KEY_LAUNCH_TIMES, 0)+". Needed: "+sConfig.getmCriteriaLaunchTimes());
-        log("Install Date & Launch Times Operator: "+sConfig.getmOperator());
-        log("Opt out: " + pref.getBoolean(KEY_OPT_OUT, false));
-        log("Criteria match? "+shouldShowRateDialog(sConfig.getmOperator()));
+        log("*** Install Date: " + new Date(pref.getLong(KEY_INSTALL_DATE, 0))+". Needed: "+sConfig.getmCriteriaInstallDays());
+        log("*** Ask Later Date: " + new Date(pref.getLong(KEY_ASK_LATER_DATE, 0)));
+        log("*** Launch Times: " + pref.getInt(KEY_LAUNCH_TIMES, 0)+". Needed: "+sConfig.getmCriteriaLaunchTimes());
+        log("*** Install Date & Launch Times Operator: "+sConfig.getmOperator());
+        log("*** Opt out: " + getOptOut());
+        log("*** Criteria match? "+shouldShowRateDialog(sConfig.getmOperator()));
+        log("*** getLaunchCountOverexeedsBy "+ getLaunchCountOverexeedsBy());
+        log("*** getLaunchDaysOverexeedsBy "+ getLaunchDaysOverexeedsBy());
     }
 
     /**
