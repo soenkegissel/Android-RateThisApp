@@ -19,6 +19,12 @@ This project implements a DialogFragment instead of a AlertDialog.
 ### Dependency
 
 ```groovy
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+```
+
+```groovy
 dependencies {
     implementation 'com.github.soenkegissel:Android-RateThisApp:1.4.0'
 }
