@@ -15,9 +15,8 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 public class DialogFragment extends AppCompatDialogFragment {
 
     private AlertDialog.Builder builder;
-    private Config sConfig;
 
-    private RateThisApp.Callback sCallback;
+    private Callback sCallback;
 
     static DialogFragment newInstance(Parcelable config, int themeId) {
         DialogFragment frag = new DialogFragment();
@@ -33,15 +32,14 @@ public class DialogFragment extends AppCompatDialogFragment {
      * The callback will receive yes/no/later events.
      * @param callback
      */
-    void setCallback(RateThisApp.Callback callback) {
+    void setCallback(Callback callback) {
         sCallback = callback;
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         int themeId = getArguments().getInt("themeId");
-
-        sConfig = getArguments().getParcelable("config");
+        Config sConfig = getArguments().getParcelable("config");
 
         builder = new AlertDialog.Builder(getContext(), themeId);
         builder.setTitle(R.string.rta_dialog_title);
@@ -71,25 +69,29 @@ public class DialogFragment extends AppCompatDialogFragment {
         builder.setPositiveButton(R.string.rta_dialog_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                sCallback.onYesClicked();
+                if(sCallback != null)
+                    sCallback.onYesClicked();
             }
         });
         builder.setNeutralButton(R.string.rta_dialog_cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                sCallback.onCancelClicked();
+                if(sCallback != null)
+                    sCallback.onCancelClicked();
             }
         });
         builder.setNegativeButton(R.string.rta_dialog_no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                sCallback.onNoClicked();
+                if(sCallback != null)
+                    sCallback.onNoClicked();
             }
         });
         builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                sCallback.onCancelClicked();
+                if(sCallback != null)
+                    sCallback.onCancelClicked();
             }
         });
         return builder.create();

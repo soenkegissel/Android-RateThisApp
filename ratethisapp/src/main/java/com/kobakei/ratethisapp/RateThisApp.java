@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
  * @author Keisuke Kobayashi (k.kobayashi.122@gmail.com)
  *
  */
-public class RateThisApp {
+public class RateThisApp implements Callback {
 
     private static final String TAG = RateThisApp.class.getSimpleName();
 
@@ -192,46 +192,9 @@ public class RateThisApp {
     private void showRateDialog(final FragmentActivity activity, int themeId) {
         DialogFragment newFragment = DialogFragment.newInstance(
                 sConfig, themeId);
-        newFragment.setCallback(callback);
+        newFragment.setCallback(this);
         newFragment.show(activity.getSupportFragmentManager(), "dialog");
     }
-
-    private Callback callback = new Callback() {
-        @Override
-        public void onYesClicked() {
-            if (sCallback != null) {
-                sCallback.onYesClicked();
-            }
-            String appPackage = fragmentActivity.getPackageName();
-            String url = "market://details?id=" + appPackage;
-            if (!TextUtils.isEmpty(sConfig.getmUrl())) {
-                url = sConfig.getmUrl();
-            }
-            try {
-                fragmentActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-            } catch (android.content.ActivityNotFoundException anfe) {
-                fragmentActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + fragmentActivity.getPackageName())));
-            }
-            setOptOut(true);
-        }
-
-        @Override
-        public void onNoClicked() {
-            if (sCallback != null) {
-                sCallback.onNoClicked();
-            }
-            setOptOut(true);
-        }
-
-        @Override
-        public void onCancelClicked() {
-            if (sCallback != null) {
-                sCallback.onCancelClicked();
-            }
-            clearSharedPreferences();
-            storeAskLaterDate();
-        }
-    };
 
     /**
      * Stop showing the rate dialog
@@ -366,23 +329,40 @@ public class RateThisApp {
         }
     }
 
-    /**
-     * Callback of dialog click event
-     */
-    public interface Callback {
-        /**
-         * "Rate now" event
-         */
-        void onYesClicked();
-
-        /**
-         * "No, thanks" event
-         */
-        void onNoClicked();
-
-        /**
-         * "Later" event
-         */
-        void onCancelClicked();
+    @Override
+    public void onYesClicked() {
+        if (sCallback != null) {
+            sCallback.onYesClicked();
+        }
+        String appPackage = fragmentActivity.getPackageName();
+        String url = "market://details?id=" + appPackage;
+        if (!TextUtils.isEmpty(sConfig.getmUrl())) {
+            url = sConfig.getmUrl();
+        }
+        try {
+            fragmentActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+        } catch (android.content.ActivityNotFoundException anfe) {
+            fragmentActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + fragmentActivity.getPackageName())));
+        }
+        setOptOut(true);
     }
+
+    @Override
+    public void onNoClicked() {
+        if (sCallback != null) {
+            sCallback.onNoClicked();
+        }
+        setOptOut(true);
+    }
+
+    @Override
+    public void onCancelClicked() {
+        if (sCallback != null) {
+            sCallback.onCancelClicked();
+        }
+        clearSharedPreferences();
+        storeAskLaterDate();
+    }
+
+
 }
