@@ -3,6 +3,7 @@ package com.kobakei.ratethisapp.sample;
 import android.app.Application;
 
 import com.kobakei.ratethisapp.Config;
+import com.kobakei.ratethisapp.Market;
 import com.kobakei.ratethisapp.RateThisApp;
 
 /**
@@ -17,6 +18,6 @@ public class MainApplication extends Application {
         super.onCreate();
 
         Config config = new Config(3, 5, Config.Operator.OR);
-        RateThisApp.initialize(this, config);
+        RateThisApp.initialize(this, config, Market.AMAZON);
     }
 }

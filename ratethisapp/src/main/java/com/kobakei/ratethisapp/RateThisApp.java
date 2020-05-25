@@ -41,6 +41,18 @@ public class RateThisApp implements Callback {
 
     private static final String TAG = RateThisApp.class.getSimpleName();
 
+    public static final String MARKET_AMAZON_URL = "amzn://apps/android?p=";
+    public static final String WEB_AMAZON_URL = "http://www.amazon.com/gp/mas/dl/android?p=";
+
+    public static final String MARKET_HUAWEI_URL = "appmarket://details?id=";
+
+    public static final String MARKET_GOOGLE_URL = "market://details?id=";
+    public static final String WEB_GOOGLE_URL = "http://play.google.com/store/apps/details?id=";
+
+    public static final String MARKET_SAMSUNG_URL = "samsungapps://ProductDetail/";
+    public static final String WEB_SAMSUNG_URL = "http://www.samsungapps.com/appquery/appDetail.as?appId=";
+
+
     private static final String PREF_NAME = "RateThisApp";
     private static final String KEY_INSTALL_DATE = "rta_install_date";
     private static final String KEY_LAUNCH_TIMES = "rta_launch_times";
@@ -58,23 +70,25 @@ public class RateThisApp implements Callback {
     private FragmentActivity fragmentActivity;
     private Context mContext;
 
+    private Market mMarket;
+
     //https://de.wikibooks.org/wiki/Muster:_Java:_Singleton
     @SuppressLint("StaticFieldLeak")
     private static volatile RateThisApp INSTANCE;
 
-    public static RateThisApp initialize(Context context, Config config) {
+    public static RateThisApp initialize(Context context, Config config, Market market) {
         Context applicationContext;
         if (context.getApplicationContext() == null) {
             applicationContext = context;
         } else {
             applicationContext = context.getApplicationContext();
         }
-        return INSTANCE = new RateThisApp(applicationContext, config);
+        return INSTANCE = new RateThisApp(applicationContext, config, market);
     }
 
-    public static RateThisApp initialize(Context context) {
+    public static RateThisApp initialize(Context context, Market market) {
         Log.w(TAG, "RateThisApp initialized without a custom configuration. Will use default values.");
-        return initialize(context, new Config(7, 10, Config.Operator.OR));
+        return initialize(context, new Config(7, 10, Config.Operator.OR), market);
     }
 
     public static RateThisApp getInstance(FragmentActivity fragmentActivity) {
@@ -86,9 +100,10 @@ public class RateThisApp implements Callback {
         return RateThisApp.INSTANCE;
     }
 
-    private RateThisApp(Context context, Config config) {
+    private RateThisApp(Context context, Config config, Market market) {
         this.mContext = context;
         this.sConfig = config;
+        this.mMarket = market;
 
         setup();
     }
@@ -335,16 +350,58 @@ public class RateThisApp implements Callback {
             sCallback.onYesClicked();
         }
         String appPackage = fragmentActivity.getPackageName();
-        String url = "market://details?id=" + appPackage;
+        String url = getMarketURL(mMarket, appPackage);
         if (!TextUtils.isEmpty(sConfig.getmUrl())) {
             url = sConfig.getmUrl();
         }
         try {
-            fragmentActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            fragmentActivity.startActivity(intent);
         } catch (android.content.ActivityNotFoundException anfe) {
-            fragmentActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + fragmentActivity.getPackageName())));
+            url = getWebURL(mMarket, appPackage);
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            fragmentActivity.startActivity(intent);
         }
         setOptOut(true);
+    }
+
+    private String getWebURL(Market mMarket, String appPackage) {
+        String URL = "";
+        switch (mMarket) {
+            case AMAZON:
+                URL = WEB_AMAZON_URL.concat(appPackage);
+                break;
+            case GOOGLE:
+                URL = WEB_GOOGLE_URL.concat(appPackage);
+                break;
+            case HUAWEI:
+                throw new UnableToFindMarketException("Huawei does not support web rating by packagename");
+            case SAMSUNG:
+                URL = WEB_SAMSUNG_URL.concat(appPackage);
+                break;
+        }
+        return URL;
+    }
+
+    private String getMarketURL(Market mMarket, String appPackage) {
+        String URL = "";
+        switch (mMarket) {
+            case AMAZON:
+                URL = MARKET_AMAZON_URL.concat(appPackage);
+                break;
+            case GOOGLE:
+                URL = MARKET_GOOGLE_URL.concat(appPackage);
+                break;
+            case HUAWEI:
+                URL = MARKET_HUAWEI_URL.concat(appPackage);
+                break;
+            case SAMSUNG:
+                URL = MARKET_SAMSUNG_URL.concat(appPackage);
+                break;
+        }
+        return URL;
     }
 
     @Override
