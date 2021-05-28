@@ -373,23 +373,22 @@ public class RateThisApp implements Callback {
                 if (task.isSuccessful()) {
                     // We can get the ReviewInfo object
                     mReviewInfo = task.getResult();
+                    Task<Void> flow = mReviewManager.launchReviewFlow(mFragmentActivity, mReviewInfo);
+                    flow.addOnCompleteListener(task2 -> {
+                        // The flow has finished. The API does not indicate whether the user
+                        // reviewed or not, or even whether the review dialog was shown. Thus, no
+                        // matter the result, we continue our app flow.
+                        if (sCallback != null) {
+                            sCallback.onYesClicked();
+                        }
+                    });
                 } else {
                     // There was some problem, log or handle the error code.
                     launchIntent(finalUrl, appPackage);
                 }
             });
         }
-        if(mReviewInfo != null) {
-            Task<Void> flow = mReviewManager.launchReviewFlow(mFragmentActivity, mReviewInfo);
-            flow.addOnCompleteListener(task -> {
-                // The flow has finished. The API does not indicate whether the user
-                // reviewed or not, or even whether the review dialog was shown. Thus, no
-                // matter the result, we continue our app flow.
-                if (sCallback != null) {
-                    sCallback.onYesClicked();
-                }
-            });
-        } else {
+        else {
             launchIntent(url, appPackage);
             if (sCallback != null) {
                 sCallback.onYesClicked();
