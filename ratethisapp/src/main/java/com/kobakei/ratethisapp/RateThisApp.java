@@ -28,6 +28,12 @@ import android.util.Log;
 
 import androidx.fragment.app.FragmentActivity;
 
+import com.google.android.play.core.review.ReviewInfo;
+import com.google.android.play.core.review.ReviewManager;
+import com.google.android.play.core.review.ReviewManagerFactory;
+import com.google.android.play.core.review.testing.FakeReviewManager;
+import com.google.android.play.core.tasks.Task;
+
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -67,14 +73,27 @@ public class RateThisApp implements Callback {
     private Config sConfig;
     private Callback sCallback;
 
-    private FragmentActivity fragmentActivity;
+    private FragmentActivity mFragmentActivity;
     private Context mContext;
 
     private Market mMarket;
 
+    private ReviewManager mReviewManager;
+    private ReviewInfo mReviewInfo;
+
     //https://de.wikibooks.org/wiki/Muster:_Java:_Singleton
     @SuppressLint("StaticFieldLeak")
     private static volatile RateThisApp INSTANCE;
+
+    private RateThisApp(Context context, Config config, Market market) {
+        this.mContext = context;
+        this.sConfig = config;
+        this.mMarket = market;
+
+        this.mReviewManager = BuildConfig.DEBUG ? new FakeReviewManager(mContext) : ReviewManagerFactory.create(mContext);
+
+        setup();
+    }
 
     public static RateThisApp initialize(Context context, Config config, Market market) {
         Context applicationContext;
@@ -95,18 +114,12 @@ public class RateThisApp implements Callback {
         if(INSTANCE == null) {
             throw new NullPointerException("RateThisApp not initialized. Call RateThisApp.initalize(Context, Config) from your application class.");
         }
-        INSTANCE.fragmentActivity = fragmentActivity;
+        INSTANCE.mFragmentActivity = fragmentActivity;
 
         return RateThisApp.INSTANCE;
     }
 
-    private RateThisApp(Context context, Config config, Market market) {
-        this.mContext = context;
-        this.sConfig = config;
-        this.mMarket = market;
 
-        setup();
-    }
 
     /**
      * Set callback INSTANCE.
@@ -163,10 +176,10 @@ public class RateThisApp implements Callback {
      */
     public boolean showRateDialogIfNeeded(int themeId, boolean forceDialog) {
         if(forceDialog) {
-            showRateDialog(fragmentActivity, themeId);
+            showRateDialog(mFragmentActivity, themeId);
             return true;
         } else if (shouldShowRateDialog(sConfig.getmOperator())) {
-            showRateDialog(fragmentActivity, themeId);
+            showRateDialog(mFragmentActivity, themeId);
             return true;
         } else {
             return false;
@@ -346,25 +359,57 @@ public class RateThisApp implements Callback {
 
     @Override
     public void onYesClicked() {
-        if (sCallback != null) {
-            sCallback.onYesClicked();
-        }
-        String appPackage = fragmentActivity.getPackageName();
+        String appPackage = mFragmentActivity.getPackageName();
         String url = getMarketURL(mMarket, appPackage);
         if (!TextUtils.isEmpty(sConfig.getmUrl())) {
             url = sConfig.getmUrl();
         }
+
+        if(mMarket.equals(Market.GOOGLE)) {
+            ReviewManager manager = ReviewManagerFactory.create(mContext);
+            Task<ReviewInfo> request = manager.requestReviewFlow();
+            String finalUrl = url;
+            request.addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    // We can get the ReviewInfo object
+                    mReviewInfo = task.getResult();
+                } else {
+                    // There was some problem, log or handle the error code.
+                    launchIntent(finalUrl, appPackage);
+                }
+            });
+        }
+        if(mReviewInfo != null) {
+            Task<Void> flow = mReviewManager.launchReviewFlow(mFragmentActivity, mReviewInfo);
+            flow.addOnCompleteListener(task -> {
+                // The flow has finished. The API does not indicate whether the user
+                // reviewed or not, or even whether the review dialog was shown. Thus, no
+                // matter the result, we continue our app flow.
+                if (sCallback != null) {
+                    sCallback.onYesClicked();
+                }
+            });
+        } else {
+            launchIntent(url, appPackage);
+            if (sCallback != null) {
+                sCallback.onYesClicked();
+            }
+        }
+        setOptOut(true);
+    }
+
+    private void launchIntent(String url, String appPackage) {
         try {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            fragmentActivity.startActivity(intent);
+            mFragmentActivity.startActivity(intent);
+
         } catch (android.content.ActivityNotFoundException anfe) {
             url = getWebURL(mMarket, appPackage);
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            fragmentActivity.startActivity(intent);
+            mFragmentActivity.startActivity(intent);
         }
-        setOptOut(true);
     }
 
     private String getWebURL(Market mMarket, String appPackage) {

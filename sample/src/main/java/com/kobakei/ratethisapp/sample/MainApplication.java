@@ -17,7 +17,7 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        Config config = new Config(3, 5, Config.Operator.OR);
-        RateThisApp.initialize(this, config, Market.AMAZON);
+        Config config = new Config(1, 1, Config.Operator.OR);
+        RateThisApp.initialize(this, config, Market.GOOGLE);
     }
 }
