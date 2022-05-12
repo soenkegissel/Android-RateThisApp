@@ -81,7 +81,7 @@ public class RateThisApp implements Callback {
 
     private final Market mMarket;
 
-    private final ReviewManager mReviewManager;
+    private ReviewManager mReviewManager;
     private ReviewInfo mReviewInfo;
 
     //https://de.wikibooks.org/wiki/Muster:_Java:_Singleton
@@ -369,17 +369,15 @@ public class RateThisApp implements Callback {
         }
 
         if(mMarket.equals(Market.GOOGLE)) {
-            ReviewManager manager = ReviewManagerFactory.create(mContext);
-            Task<ReviewInfo> request = manager.requestReviewFlow();
+            mReviewManager = ReviewManagerFactory.create(mContext);
             String finalUrl = url;
-            request.addOnCompleteListener(task -> {
+            mReviewManager.requestReviewFlow().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     // We can get the ReviewInfo object
                     mReviewInfo = task.getResult();
                     Log.d("ReviewManager", "onYesClicked. ReviewInfo: " + mReviewInfo);
-                    Task<Void> flow = mReviewManager.launchReviewFlow(mFragmentActivity, mReviewInfo);
-
-                    flow.addOnCompleteListener(new OnCompleteListener<Void>() {
+                    mReviewManager.launchReviewFlow(mFragmentActivity, mReviewInfo)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             // The flow has finished. The API does not indicate whether the user
@@ -387,15 +385,12 @@ public class RateThisApp implements Callback {
                             // matter the result, we continue our app flow.
                             Log.d("ReviewManager", "Flow Completed.");
                         }
-                    });
-
-                    flow.addOnFailureListener(new OnFailureListener() {
+                    }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(Exception e) {
                             Log.e("ReviewManager", "Flow failed. Exception: " + e.getMessage());
                         }
                     });
-
 
                     if (sCallback != null) {
                         sCallback.onYesClicked();
