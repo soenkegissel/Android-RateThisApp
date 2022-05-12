@@ -26,12 +26,14 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.play.core.review.ReviewInfo;
 import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
 import com.google.android.play.core.review.testing.FakeReviewManager;
+import com.google.android.play.core.tasks.OnCompleteListener;
 import com.google.android.play.core.tasks.Task;
 
 import java.util.Date;
@@ -70,15 +72,15 @@ public class RateThisApp implements Callback {
     private int mLaunchTimes;
     private boolean mOptOut;
 
-    private Config sConfig;
+    private final Config sConfig;
     private Callback sCallback;
 
     private FragmentActivity mFragmentActivity;
-    private Context mContext;
+    private final Context mContext;
 
-    private Market mMarket;
+    private final Market mMarket;
 
-    private ReviewManager mReviewManager;
+    private final ReviewManager mReviewManager;
     private ReviewInfo mReviewInfo;
 
     //https://de.wikibooks.org/wiki/Muster:_Java:_Singleton
@@ -373,7 +375,14 @@ public class RateThisApp implements Callback {
                 if (task.isSuccessful()) {
                     // We can get the ReviewInfo object
                     mReviewInfo = task.getResult();
+                    Log.d("ReviewManager", "onYesClicked. ReviewInfo: " + mReviewInfo);
                     Task<Void> flow = mReviewManager.launchReviewFlow(mFragmentActivity, mReviewInfo);
+                    flow.addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Log.d("ReviewManager", "Flow Completed.");
+                        }
+                    });
 
                     if (sCallback != null) {
                         sCallback.onYesClicked();
