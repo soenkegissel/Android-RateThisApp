@@ -81,7 +81,7 @@ public class RateThisApp implements Callback {
 
     private final Market mMarket;
 
-    private ReviewManager mReviewManager;
+    private final ReviewManager mReviewManager;
     private ReviewInfo mReviewInfo;
 
     //https://de.wikibooks.org/wiki/Muster:_Java:_Singleton
@@ -369,7 +369,6 @@ public class RateThisApp implements Callback {
         }
 
         if(mMarket.equals(Market.GOOGLE)) {
-            mReviewManager = ReviewManagerFactory.create(mContext);
             String finalUrl = url;
             mReviewManager.requestReviewFlow().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
