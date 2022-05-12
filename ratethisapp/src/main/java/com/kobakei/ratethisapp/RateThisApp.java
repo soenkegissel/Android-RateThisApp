@@ -34,6 +34,7 @@ import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
 import com.google.android.play.core.review.testing.FakeReviewManager;
 import com.google.android.play.core.tasks.OnCompleteListener;
+import com.google.android.play.core.tasks.OnFailureListener;
 import com.google.android.play.core.tasks.Task;
 
 import java.util.Date;
@@ -204,7 +205,7 @@ public class RateThisApp implements Callback {
             long threshold = TimeUnit.DAYS.toMillis(sConfig.getmCriteriaInstallDays());   // msec
             boolean launchDate =
                     new Date().getTime() - mInstallDate.getTime() >= threshold &&
-                    new Date().getTime() - mAskLaterDate.getTime() >= threshold;
+                            new Date().getTime() - mAskLaterDate.getTime() >= threshold;
             log("launchTimes: "+launchTimes+". launchDate: "+launchDate);
 
             if (operator.equals(Config.Operator.OR)) {
@@ -377,22 +378,29 @@ public class RateThisApp implements Callback {
                     mReviewInfo = task.getResult();
                     Log.d("ReviewManager", "onYesClicked. ReviewInfo: " + mReviewInfo);
                     Task<Void> flow = mReviewManager.launchReviewFlow(mFragmentActivity, mReviewInfo);
+
                     flow.addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
+                            // The flow has finished. The API does not indicate whether the user
+                            // reviewed or not, or even whether the review dialog was shown. Thus, no
+                            // matter the result, we continue our app flow.
                             Log.d("ReviewManager", "Flow Completed.");
                         }
                     });
+
+                    flow.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(Exception e) {
+                            Log.e("ReviewManager", "Flow failed. Exception: " + e.getMessage());
+                        }
+                    });
+
 
                     if (sCallback != null) {
                         sCallback.onYesClicked();
                     }
 
-                    flow.addOnCompleteListener(task2 -> {
-                        // The flow has finished. The API does not indicate whether the user
-                        // reviewed or not, or even whether the review dialog was shown. Thus, no
-                        // matter the result, we continue our app flow.
-                    });
                 } else {
                     // There was some problem, log or handle the error code.
                     launchIntent(finalUrl, appPackage);
