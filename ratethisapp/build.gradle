@@ -57,7 +57,7 @@ afterEvaluate {
         publications {
             // Creates a Maven publication called "release".
             release(MavenPublication) {
-                components.getByName('release')
+                from components.release
                 groupId = 'com.rucksack'
                 artifactId "ratethisapp"
                 version = '1.8.6'
