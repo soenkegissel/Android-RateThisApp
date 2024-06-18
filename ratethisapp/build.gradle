@@ -8,6 +8,9 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 34
+        aarMetadata {
+            minCompileSdk = 21
+        }
     }
 
     testOptions.unitTests.includeAndroidResources = true
@@ -28,6 +31,9 @@ android {
         buildConfig true
     }
 }
+
+
+
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.0'
