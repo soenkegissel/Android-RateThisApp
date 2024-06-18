@@ -9,6 +9,8 @@ import android.view.KeyEvent;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
+import com.rucksack.ratethisapp.R;
+
 /**
  * Created by Sönke Gissel on 10.09.2019.
  */
@@ -77,7 +79,7 @@ public class DialogFragment extends AppCompatDialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if(sCallback != null)
-                    sCallback.onCancelClicked();
+                    sCallback.onLaterClicked();
             }
         });
         builder.setNegativeButton(R.string.rta_dialog_no, new DialogInterface.OnClickListener() {
@@ -91,7 +93,7 @@ public class DialogFragment extends AppCompatDialogFragment {
             @Override
             public void onCancel(DialogInterface dialog) {
                 if(sCallback != null)
-                    sCallback.onCancelClicked();
+                    sCallback.onLaterClicked();
             }
         });
         return builder.create();

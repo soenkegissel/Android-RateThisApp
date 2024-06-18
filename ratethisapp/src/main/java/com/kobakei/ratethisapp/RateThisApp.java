@@ -33,9 +33,10 @@ import com.google.android.play.core.review.ReviewInfo;
 import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
 import com.google.android.play.core.review.testing.FakeReviewManager;
-import com.google.android.play.core.tasks.OnCompleteListener;
-import com.google.android.play.core.tasks.OnFailureListener;
-import com.google.android.play.core.tasks.Task;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.rucksack.ratethisapp.BuildConfig;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -44,6 +45,7 @@ import java.util.concurrent.TimeUnit;
  * RateThisApp<br>
  * A library to show the app rate dialog
  * @author Keisuke Kobayashi (k.kobayashi.122@gmail.com)
+ * @editor Sönke Gissel (soenke.gissel@gmail.com)
  *
  */
 public class RateThisApp implements Callback {
@@ -364,9 +366,6 @@ public class RateThisApp implements Callback {
     public void onYesClicked() {
         String appPackage = mFragmentActivity.getPackageName();
         String url = getMarketURL(mMarket, appPackage);
-        if (!TextUtils.isEmpty(sConfig.getmUrl())) {
-            url = sConfig.getmUrl();
-        }
 
         if(mMarket.equals(Market.GOOGLE)) {
             String finalUrl = url;
@@ -470,9 +469,9 @@ public class RateThisApp implements Callback {
     }
 
     @Override
-    public void onCancelClicked() {
+    public void onLaterClicked() {
         if (sCallback != null) {
-            sCallback.onCancelClicked();
+            sCallback.onLaterClicked();
         }
         clearSharedPreferences();
         storeAskLaterDate();

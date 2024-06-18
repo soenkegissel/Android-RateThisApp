@@ -20,5 +20,5 @@ public interface Callback {
     /**
      * "Later" event
      */
-    void onCancelClicked();
+    void onLaterClicked();
 }

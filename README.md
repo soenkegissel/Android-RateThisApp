@@ -9,10 +9,9 @@ The library monitors the following status
 
 * How many times is the app launched
 * How long days does it take from the app installation
+* Works with all app markets (GOOGLE, AMAZON, SAMSUNG, HUAWEI)
 
-and show a dialog to engage users to rate the app in Google Play.
-
-This project implements a DialogFragment instead of a AlertDialog.
+and show a dialog to engage users to rate the app in Google Play, Amazon AppStore, Samsung Galaxy and Huawei.
 
 ## Getting Started
 
@@ -26,7 +25,7 @@ repositories {
 
 ```groovy
 dependencies {
-    implementation 'com.github.soenkegissel:Android-RateThisApp:1.6.0'
+    implementation 'com.github.soenkegissel:Android-RateThisApp:1.7.0'
 }
 ```
 
@@ -42,7 +41,21 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
         
-        RateThisApp.initialize(this);
+        //Use with context, default config (7 days and 10 launches) and a Market (Google, Amazon, Samsung, Huawei).
+        RateThisApp.initialize(this, Market.SAMSUNG);
+        
+        //Use with custom config and Google as Market.
+        RateThisApp.initialize(this, new Config(3, 5), Market.GOOGLE);
+        
+        //Use with Gradle buildConfigField
+        RateThisApp.initialize(this, config, Market.valueOf(BuildConfig.MARKET));
+        //and add to your build.gradle(:App)
+        release {
+            buildConfigField "String", "MARKET", "GOOGLE"
+        }
+        debug {
+            buildConfigField "String", "MARKET", "GOOGLE"
+        }
     }
 }
 ```
@@ -98,7 +111,7 @@ public class MainApplication extends Application {
         super.onCreate();
         
         Config config = new Config(3, 5, Config.Operator.AND);
-        RateThisApp.initialize(this, config);
+        RateThisApp.initialize(this, config, Market.GOOGLE);
     }
 }
 ```
@@ -113,15 +126,6 @@ You can override title, message and button labels in your values.xml.
     <string name="rta_dialog_ok">Rate me</string>
     <string name="rta_dialog_cancel">Later</string>
     <string name="rta_dialog_no">No, dude</string>
-```
-
-### Custom url
-
-In default, rate button navigates to the application page on Google Play. You can override this url as below.
-
-```java
-Config config = new Config();
-config.setUrl("http://www.example.com");
 ```
 
 ### Opt out from your code
@@ -149,8 +153,8 @@ RateThisApp.getInstance(this).setCallback(new RateThisApp.Callback() {
     }
 
     @Override
-    public void onCancelClicked() {
-        Toast.makeText(MainActivity.this, "Cancel event", Toast.LENGTH_SHORT).show();
+    public void onLaterClicked() {
+        Toast.makeText(MainActivity.this, "Later event", Toast.LENGTH_SHORT).show();
     }
 });
 ```
@@ -165,7 +169,7 @@ In present, I need contributors who can translate resources from English/German 
 ```
 Copyright 2013-2017 Keisuke Kobayashi
 and
-Copyright 2019 Sönke Gissel
+Copyright 2024 Sönke Gissel
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

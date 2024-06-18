@@ -54,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelClicked() {
-                Toast.makeText(MainActivity.this, "Cancel event", Toast.LENGTH_SHORT).show();
+            public void onLaterClicked() {
+                Toast.makeText(MainActivity.this, "Later event", Toast.LENGTH_SHORT).show();
             }};
 
         rateThisApp.setCallback(callback);

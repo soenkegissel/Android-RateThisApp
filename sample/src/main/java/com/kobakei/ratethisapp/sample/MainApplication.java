@@ -17,7 +17,12 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        Config config = new Config(1, 1, Config.Operator.OR);
-        RateThisApp.initialize(this, config, Market.GOOGLE);
+        //RateThisApp.initialize(this, Market.SAMSUNG);
+
+        //RateThisApp.initialize(this, new Config(3, 5), Market.GOOGLE);
+
+        Config config = new Config(2, 3, Config.Operator.OR);
+        RateThisApp.initialize(this, config, Market.valueOf(BuildConfig.MARKET));
+        //Take a look at build.gradle to see which markets are available.
     }
 }

@@ -1,26 +1,41 @@
 apply plugin: "com.android.application"
 
 android {
-    compileSdkVersion 32
+    compileSdk 34
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 32
+        minSdkVersion 21
+        targetSdkVersion 34
         versionCode 1
         versionName "1.0.0"
     }
     buildTypes {
-      release {
-        minifyEnabled false
-        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-      }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            buildConfigField "String", "MARKET", "GOOGLE"
+            //buildConfigField "String", "MARKET", "SAMSUNG"
+        }
+        debug {
+            buildConfigField "String", "MARKET", "GOOGLE"
+            //buildConfigField "String", "MARKET", "SAMSUNG"
+        }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
     namespace 'com.kobakei.ratethisapp.sample'
+
+    buildFeatures {
+        buildConfig true
+    }
 }
 
 dependencies {
     implementation project(':ratethisapp')
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
 
 }
