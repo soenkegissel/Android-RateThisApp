@@ -30,6 +30,13 @@ android {
     buildFeatures {
         buildConfig true
     }
+
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
 }
 
 
@@ -50,10 +57,10 @@ afterEvaluate {
         publications {
             // Creates a Maven publication called "release".
             release(MavenPublication) {
-                from components.findByName('release')
-                groupId = 'com.rucksack.ratethisapp'
+                components.getByName('release')
+                groupId = 'com.rucksack'
                 artifactId "$project.name"
-                version = '1.8.3'
+                version = '1.8.5'
             }
         }
     }
