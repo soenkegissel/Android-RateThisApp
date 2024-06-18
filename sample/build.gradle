@@ -13,12 +13,12 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-            buildConfigField "String", "MARKET", "GOOGLE"
-            //buildConfigField "String", "MARKET", "SAMSUNG"
+            buildConfigField "String", "MARKET", "\"GOOGLE\""
+            //buildConfigField "String", "MARKET", "\"SAMSUNG\""
         }
         debug {
-            buildConfigField "String", "MARKET", "GOOGLE"
-            //buildConfigField "String", "MARKET", "SAMSUNG"
+            buildConfigField "String", "MARKET", "\"GOOGLE\""
+            //buildConfigField "String", "MARKET", "\"SAMSUNG\""
         }
     }
 
