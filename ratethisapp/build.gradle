@@ -59,8 +59,8 @@ afterEvaluate {
             release(MavenPublication) {
                 components.getByName('release')
                 groupId = 'com.rucksack'
-                artifactId "$project.name"
-                version = '1.8.5'
+                artifactId "ratethisapp"
+                version = '1.8.6'
             }
         }
     }
