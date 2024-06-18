@@ -16,15 +16,15 @@ android {
     testOptions.unitTests.includeAndroidResources = true
 
     buildTypes {
-      release {
-        minifyEnabled false
-      }
+        release {
+            minifyEnabled false
+        }
     }
     namespace 'com.rucksack.ratethisapp'
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     buildFeatures {
@@ -42,4 +42,19 @@ dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.22"))
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.robolectric:robolectric:4.12.2'
+}
+
+
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a Maven publication called "release".
+            release(MavenPublication) {
+                from components.findByName('release')
+                groupId = 'com.rucksack.ratethisapp'
+                artifactId "$project.name"
+                version = '1.8.3'
+            }
+        }
+    }
 }
