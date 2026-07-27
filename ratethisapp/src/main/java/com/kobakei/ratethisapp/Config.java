@@ -26,6 +26,7 @@ public class Config implements Parcelable {
     private int mCriteriaLaunchTimes;
     private int mCancelMode = CANCEL_MODE_BACK_KEY_OR_TOUCH_OUTSIDE;
     private Operator mOperator;
+    private boolean mUseFakeReviewManager = false;
 
     /**
      * Constructor with default criteria.
@@ -83,9 +84,18 @@ public class Config implements Parcelable {
         return mOperator;
     }
 
+    public boolean isUseFakeReviewManager() {
+        return mUseFakeReviewManager;
+    }
+
+    public void setUseFakeReviewManager(boolean useFakeReviewManager) {
+        this.mUseFakeReviewManager = useFakeReviewManager;
+    }
+
     // Parcelling part
     protected Config(Parcel in){
         mCancelMode = in.readInt();
+        mUseFakeReviewManager = in.readByte() != 0;
     }
 
     @Override
@@ -96,6 +106,7 @@ public class Config implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(mCancelMode);
+        dest.writeByte((byte) (mUseFakeReviewManager ? 1 : 0));
     }
 
     @SuppressWarnings("unused")

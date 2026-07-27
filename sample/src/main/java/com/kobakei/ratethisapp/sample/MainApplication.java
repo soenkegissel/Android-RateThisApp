@@ -17,12 +17,13 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        //RateThisApp.initialize(this, Market.SAMSUNG);
-
-        //RateThisApp.initialize(this, new Config(3, 5), Market.GOOGLE);
-
         Config config = new Config(2, 3, Config.Operator.OR);
-        RateThisApp.initialize(this, config, Market.valueOf(BuildConfig.MARKET));
-        //Take a look at build.gradle to see which markets are available.
+        // Force FakeReviewManager for testing Google Play Review flow
+        // The app must be downloaded from the Google Play Store (e.g., via an Internal Test Track).
+        config.setUseFakeReviewManager(true);
+
+        // Using the new automatic initialization based on BuildConfig.MARKET
+        // or explicitly passing the market from this app's BuildConfig
+        RateThisApp.initialize(this, config, Market.fromName(BuildConfig.MARKET));
     }
 }

@@ -3,9 +3,11 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
-        jcenter()
         maven { url "https://jitpack.io" }
     }
+}
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
 }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
@@ -13,12 +15,7 @@ dependencyResolutionManagement {
         mavenCentral()
         google()
         gradlePluginPortal()
-        jcenter()
-        maven { url "https://s3.amazonaws.com/smaato-sdk-releases/" }
-        maven { url "https://dl-maven-android.mintegral.com/repository/mbridge_android_sdk_oversea" }
-        maven { url 'https://artifact.bytedance.com/repository/pangle' }
         maven { url "https://jitpack.io" }
-        maven { url 'https://android-sdk.is.com/' }
     }
 }
 

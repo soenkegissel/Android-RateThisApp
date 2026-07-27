@@ -3,13 +3,13 @@ Android-RateThisApp - ENHANCED
 
 Android-RateThisApp is an library to show "Rate this app" dialog ENHANCED.
 
-![Screen shot](https://raw.github.com/kobakei/Android-RateThisApp/master/screenshot_resized.png)
+<img src="https://github.com/soenkegissel/Android-RateThisApp/blob/master/Screenshot_20260727-084521.png" alt="drawing" width="360"/>
 
 The library monitors the following status
 
 * How many times is the app launched
 * How long days does it take from the app installation
-* Works with all app markets (GOOGLE, AMAZON, SAMSUNG, HUAWEI)
+* **Works with all app markets (GOOGLE, AMAZON, SAMSUNG, HUAWEI)**
 
 and show a dialog to engage users to rate the app in Google Play, Amazon AppStore, Samsung Galaxy and Huawei.
 
@@ -25,7 +25,7 @@ repositories {
 
 ```groovy
 dependencies {
-    implementation 'com.github.soenkegissel:Android-RateThisApp:1.8.1'
+    implementation 'com.github.soenkegissel:Android-RateThisApp:2.0.0'
 }
 ```
 
@@ -48,13 +48,35 @@ public class MainApplication extends Application {
         RateThisApp.initialize(this, new Config(3, 5), Market.GOOGLE);
         
         //Use with Gradle buildConfigField
-        RateThisApp.initialize(this, config, Market.valueOf(BuildConfig.MARKET));
-        //and add to your build.gradle(:App)
-        release {
-            buildConfigField "String", "MARKET", "GOOGLE"
+        RateThisApp.initialize(this, config, Market.fromName(BuildConfig.MARKET));
+    }
+}
+```
+
+### build.gradle (:app)
+
+To support multiple markets efficiently, define a `flavorDimension` and `productFlavors` in your `build.gradle` file.
+
+```groovy
+android {
+    ...
+    flavorDimensions "vendor"
+    productFlavors {
+        google {
+            dimension "vendor"
+            buildConfigField "String", "MARKET", "\"GOOGLE\""
         }
-        debug {
-            buildConfigField "String", "MARKET", "GOOGLE"
+        amazon {
+            dimension "vendor"
+            buildConfigField "String", "MARKET", "\"AMAZON\""
+        }
+        samsung {
+            dimension "vendor"
+            buildConfigField "String", "MARKET", "\"SAMSUNG\""
+        }
+        huawei {
+            dimension "vendor"
+            buildConfigField "String", "MARKET", "\"HUAWEI\""
         }
     }
 }

@@ -23,7 +23,6 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -38,6 +37,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.rucksack.ratethisapp.BuildConfig;
 
+import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -78,7 +78,7 @@ public class RateThisApp implements Callback {
     private final Config sConfig;
     private Callback sCallback;
 
-    private FragmentActivity mFragmentActivity;
+    private WeakReference<FragmentActivity> mActivityRef;
     private final Context mContext;
 
     private final Market mMarket;
@@ -95,36 +95,54 @@ public class RateThisApp implements Callback {
         this.sConfig = config;
         this.mMarket = market;
 
-        this.mReviewManager = BuildConfig.DEBUG ? new FakeReviewManager(mContext) : ReviewManagerFactory.create(mContext);
+        if (market == Market.GOOGLE && (BuildConfig.DEBUG || config.isUseFakeReviewManager())) {
+            this.mReviewManager = new FakeReviewManager(mContext);
+        } else if (market == Market.GOOGLE) {
+            this.mReviewManager = ReviewManagerFactory.create(mContext);
+        } else {
+            this.mReviewManager = null;
+        }
 
         setup();
     }
 
-    public static RateThisApp initialize(Context context, Config config, Market market) {
-        Context applicationContext;
-        if (context.getApplicationContext() == null) {
-            applicationContext = context;
-        } else {
-            applicationContext = context.getApplicationContext();
+    public static synchronized RateThisApp initialize(Context context, Config config, Market market) {
+        if (INSTANCE == null) {
+            Context applicationContext;
+            if (context.getApplicationContext() == null) {
+                applicationContext = context;
+            } else {
+                applicationContext = context.getApplicationContext();
+            }
+            INSTANCE = new RateThisApp(applicationContext, config, market);
         }
-        return INSTANCE = new RateThisApp(applicationContext, config, market);
+        return INSTANCE;
     }
 
     public static RateThisApp initialize(Context context, Market market) {
-        Log.w(TAG, "RateThisApp initialized without a custom configuration. Will use default values.");
         return initialize(context, new Config(7, 10, Config.Operator.OR), market);
+    }
+
+    /**
+     * Initialize using BuildConfig.MARKET
+     */
+    public static RateThisApp initialize(Context context) {
+        Market market = Market.fromName(BuildConfig.MARKET);
+        return initialize(context, market);
     }
 
     public static RateThisApp getInstance(FragmentActivity fragmentActivity) {
         if(INSTANCE == null) {
-            throw new NullPointerException("RateThisApp not initialized. Call RateThisApp.initalize(Context, Config) from your application class.");
+            throw new NullPointerException("RateThisApp not initialized. Call RateThisApp.initalize(Context) from your application class.");
         }
-        INSTANCE.mFragmentActivity = fragmentActivity;
+        INSTANCE.mActivityRef = new WeakReference<>(fragmentActivity);
 
         return RateThisApp.INSTANCE;
     }
 
-
+    private FragmentActivity getActivity() {
+        return mActivityRef != null ? mActivityRef.get() : null;
+    }
 
     /**
      * Set callback INSTANCE.
@@ -180,11 +198,17 @@ public class RateThisApp implements Callback {
      * @return true if shown, false otherwise.
      */
     public boolean showRateDialogIfNeeded(int themeId, boolean forceDialog) {
+        FragmentActivity activity = getActivity();
+        if (activity == null) {
+            Log.e(TAG, "Activity is null. Cannot show dialog.");
+            return false;
+        }
+
         if(forceDialog) {
-            showRateDialog(mFragmentActivity, themeId);
+            showRateDialog(activity, themeId);
             return true;
         } else if (shouldShowRateDialog(sConfig.getmOperator())) {
-            showRateDialog(mFragmentActivity, themeId);
+            showRateDialog(activity, themeId);
             return true;
         } else {
             return false;
@@ -258,7 +282,7 @@ public class RateThisApp implements Callback {
      * @return Number of days more than needed to show dialog.
      */
     public int getLaunchDaysOverexeedsBy(){
-        return Integer.parseInt(String.valueOf(TimeUnit.MILLISECONDS.toDays(new Date().getTime() - mInstallDate.getTime())-sConfig.getmCriteriaInstallDays()));
+        return (int) (TimeUnit.MILLISECONDS.toDays(new Date().getTime() - mInstallDate.getTime()) - sConfig.getmCriteriaInstallDays());
     }
 
     /**
@@ -342,6 +366,7 @@ public class RateThisApp implements Callback {
     private void printStatus() {
         SharedPreferences pref = mContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         log("*** RateThisApp Status ***");
+        log("*** Market Config: " + mMarket);
         log("*** Install Date: " + new Date(pref.getLong(KEY_INSTALL_DATE, 0))+". Needed: "+sConfig.getmCriteriaInstallDays());
         log("*** Ask Later Date: " + new Date(pref.getLong(KEY_ASK_LATER_DATE, 0)));
         log("*** Launch Times: " + pref.getInt(KEY_LAUNCH_TIMES, 0)+". Needed: "+sConfig.getmCriteriaLaunchTimes());
@@ -364,44 +389,54 @@ public class RateThisApp implements Callback {
 
     @Override
     public void onYesClicked() {
-        String appPackage = mFragmentActivity.getPackageName();
+        FragmentActivity activity = getActivity();
+        if (activity == null) {
+            Log.e(TAG, "Activity is null. Cannot handle Yes click.");
+            return;
+        }
+
+        String appPackage = activity.getPackageName();
         String url = getMarketURL(mMarket, appPackage);
 
         if(mMarket.equals(Market.GOOGLE)) {
-            String finalUrl = url;
+            final String finalUrl = url;
             mReviewManager.requestReviewFlow().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     // We can get the ReviewInfo object
                     mReviewInfo = task.getResult();
                     Log.d("ReviewManager", "onYesClicked. ReviewInfo: " + mReviewInfo);
-                    mReviewManager.launchReviewFlow(mFragmentActivity, mReviewInfo)
+                    mReviewManager.launchReviewFlow(activity, mReviewInfo)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            // The flow has finished. The API does not indicate whether the user
-                            // reviewed or not, or even whether the review dialog was shown. Thus, no
-                            // matter the result, we continue our app flow.
+                            // The flow has finished.
                             Log.d("ReviewManager", "Flow Completed.");
+                            if (sCallback != null) {
+                                sCallback.onYesClicked();
+                            }
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(Exception e) {
                             Log.e("ReviewManager", "Flow failed. Exception: " + e.getMessage());
+                            // Fallback to market URL if possible
+                            launchIntent(activity, finalUrl, appPackage);
+                            if (sCallback != null) {
+                                sCallback.onYesClicked();
+                            }
                         }
                     });
-
+                } else {
+                    // There was some problem, fallback to market URL.
+                    launchIntent(activity, finalUrl, appPackage);
                     if (sCallback != null) {
                         sCallback.onYesClicked();
                     }
-
-                } else {
-                    // There was some problem, log or handle the error code.
-                    launchIntent(finalUrl, appPackage);
                 }
             });
         }
         else {
-            launchIntent(url, appPackage);
+            launchIntent(activity, url, appPackage);
             if (sCallback != null) {
                 sCallback.onYesClicked();
             }
@@ -409,55 +444,48 @@ public class RateThisApp implements Callback {
         setOptOut(true);
     }
 
-    private void launchIntent(String url, String appPackage) {
+    private void launchIntent(FragmentActivity activity, String url, String appPackage) {
         try {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            mFragmentActivity.startActivity(intent);
+            activity.startActivity(intent);
 
         } catch (android.content.ActivityNotFoundException anfe) {
             url = getWebURL(mMarket, appPackage);
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            mFragmentActivity.startActivity(intent);
+            activity.startActivity(intent);
         }
     }
 
-    private String getWebURL(Market mMarket, String appPackage) {
-        String URL = "";
-        switch (mMarket) {
+    private String getWebURL(Market market, String appPackage) {
+        switch (market) {
             case AMAZON:
-                URL = WEB_AMAZON_URL.concat(appPackage);
-                break;
+                return WEB_AMAZON_URL + appPackage;
             case GOOGLE:
-                URL = WEB_GOOGLE_URL.concat(appPackage);
-                break;
+                return WEB_GOOGLE_URL + appPackage;
             case HUAWEI:
                 throw new UnableToFindMarketException("Huawei does not support web rating by packagename");
             case SAMSUNG:
-                URL = WEB_SAMSUNG_URL.concat(appPackage);
-                break;
+                return WEB_SAMSUNG_URL + appPackage;
+            default:
+                return "";
         }
-        return URL;
     }
 
-    private String getMarketURL(Market mMarket, String appPackage) {
-        String URL = "";
-        switch (mMarket) {
+    private String getMarketURL(Market market, String appPackage) {
+        switch (market) {
             case AMAZON:
-                URL = MARKET_AMAZON_URL.concat(appPackage);
-                break;
+                return MARKET_AMAZON_URL + appPackage;
             case GOOGLE:
-                URL = MARKET_GOOGLE_URL.concat(appPackage);
-                break;
+                return MARKET_GOOGLE_URL + appPackage;
             case HUAWEI:
-                URL = MARKET_HUAWEI_URL.concat(appPackage);
-                break;
+                return MARKET_HUAWEI_URL + appPackage;
             case SAMSUNG:
-                URL = MARKET_SAMSUNG_URL.concat(appPackage);
-                break;
+                return MARKET_SAMSUNG_URL + appPackage;
+            default:
+                return "";
         }
-        return URL;
     }
 
     @Override

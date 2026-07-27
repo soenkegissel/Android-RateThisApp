@@ -1,5 +1,23 @@
 # Change Log
 
+## 2.0.0 (2026/07/27)
+
+- Modernization & Reliability
+  - Refactored `RateThisApp` singleton to be thread-safe.
+  - Fixed a potential memory leak by using `WeakReference` for `FragmentActivity`.
+  - Improved Google Play `ReviewManager` implementation:
+    - Support for success/failure callbacks.
+    - Robust fallback to Play Store URL if the in-app review flow fails or is unavailable.
+- Multi-Market Enhancements
+  - Added support for build-time market configuration via `MARKET` BuildConfig field.
+  - Added `Market.fromName()` helper for safer enum mapping.
+  - Added detailed guidance for using `flavorDimensions` and `productFlavors` for store-specific builds.
+- Testing & Development
+  - Added `Config.useFakeReviewManager` to easily simulate Google Play review flows during development.
+- UI Improvements (Sample App)
+  - Refactored sample app layout to use `MaterialToolbar` and `CoordinatorLayout`.
+  - Implemented full edge-to-edge support with proper window insets handling.
+
 ## 1.2.0 (2017/04/27)
 
 - New feature
