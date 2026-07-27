@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Tara purogiramu iyi</string>
+    <string name="rta_dialog_message">Kana uchinakidzwa nekushandisa purogiramu iyi, unogona here kutora nguva shoma kuti uipe tarisiro? Hazvitori kupfuura miniti imwe. Tinotenda nerutsigiro rwako!</string>
+    <string name="rta_dialog_ok">Tara izvozvi</string>
+    <string name="rta_dialog_cancel">Gare gare</string>
+    <string name="rta_dialog_no">Kwete, ndatenda</string>
+
+</resources>

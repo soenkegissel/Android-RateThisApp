@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Beoordeel dizze app</string>
+    <string name="rta_dialog_message">As jo it leuk fine om dizze app te brûken, wolsto dan in momint nimme om it te beoardieljen? It duorret net langer as in minút. Tank foar jo stipe!</string>
+    <string name="rta_dialog_ok">No beoardielje</string>
+    <string name="rta_dialog_cancel">Letter</string>
+    <string name="rta_dialog_no">Nee, tankewol</string>
+
+</resources>

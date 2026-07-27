@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">I-rate ang app na ito</string>
+    <string name="rta_dialog_message">Kung nag-eenjoy ka sa paggamit ng app na ito, maaari mo bang ilaan ng ilang sandali para i-rate ito? Hindi ito tatagal ng higit sa isang minuto. Salamat sa iyong suporta!</string>
+    <string name="rta_dialog_ok">I-rate na</string>
+    <string name="rta_dialog_cancel">Mamaya na</string>
+    <string name="rta_dialog_no">Hindi, salamat</string>
+
+</resources>

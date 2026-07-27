@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Bewäert dës App</string>
+    <string name="rta_dialog_message">Wann dir gär dës App benotzt, géift dir Iech e Moment huele fir se ze bewäerten? Et dauert net méi wéi eng Minutt. Merci fir Är Ënnerstëtzung!</string>
+    <string name="rta_dialog_ok">Elo bewäerten</string>
+    <string name="rta_dialog_cancel">Méi spéit</string>
+    <string name="rta_dialog_no">Nee, merci</string>
+
+</resources>

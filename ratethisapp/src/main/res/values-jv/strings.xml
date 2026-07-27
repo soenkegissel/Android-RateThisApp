@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Wenehi rating aplikasi iki</string>
+    <string name="rta_dialog_message">Yen sampeyan seneng nggunakake aplikasi iki, apa sampeyan gelem njupuk wektu sedhela kanggo menehi rating? Ora nganti sak menit. Matur nuwun kanggo dhukungan sampeyan!</string>
+    <string name="rta_dialog_ok">Wenehi rating saiki</string>
+    <string name="rta_dialog_cancel">Mengko wae</string>
+    <string name="rta_dialog_no">Ora, matur nuwun</string>
+
+</resources>

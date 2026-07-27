@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">វាយតម្លៃកម្មវិធីនេះ</string>
+    <string name="rta_dialog_message">ប្រសិនបើអ្នករីករាយនឹងប្រើកម្មវិធីនេះ សូមចំណាយពេលបន្តិចដើម្បីវាយតម្លៃវា។ វាមិនចំណាយពេលលើសពីមួយនាទីទេ។ សូមអរគុណចំពោះការគាំទ្ររបស់អ្នក!</string>
+    <string name="rta_dialog_ok">វាយតម្លៃឥឡូវនេះ</string>
+    <string name="rta_dialog_cancel">ពេលក្រោយ</string>
+    <string name="rta_dialog_no">ទេ អរគុណ</string>
+
+</resources>

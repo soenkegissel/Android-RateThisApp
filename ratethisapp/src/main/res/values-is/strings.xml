@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Einkunn fyrir þessa app</string>
+    <string name="rta_dialog_message">Ef þér líkar að nota þessa app, myndir þú þá taka þér smá tíma til að gefa henni einkunn? Það mun ekki taka meira en eina mínútu. Takk fyrir stuðninginn!</string>
+    <string name="rta_dialog_ok">Gefðu einkunn núna</string>
+    <string name="rta_dialog_cancel">Síðar</string>
+    <string name="rta_dialog_no">Nei, takk</string>
+
+</resources>

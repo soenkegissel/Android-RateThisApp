@@ -1,0 +1,7 @@
+<resources>
+    <string name="rta_dialog_title">Hinda seda rakendust</string>
+    <string name="rta_dialog_message">Kui sulle meeldib seda rakendust kasutada, kas sa võiksid võtta hetke, et seda hinnata? See ei võta rohkem kui minut aega. Aitäh toetuse eest!</string>
+    <string name="rta_dialog_ok">Hinda nüüd</string>
+    <string name="rta_dialog_cancel">Hiljem</string>
+    <string name="rta_dialog_no">Ei, aitäh</string>
+</resources>

@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">ھن ايپ کي ريٽ ڪريو</string>
+    <string name="rta_dialog_message">جيڪڏھن توھان کي ھي ايپ پسند آئي آھي، ته مھرباني ڪري ھڪ لمحو وٺي ان کي ريٽ ڪريو. ھن ۾ ھڪ منٽ کان وڌيڪ وقت نه لڳندو. توھان جي مدد جو شڪريو!</string>
+    <string name="rta_dialog_ok">ھاڻي ريٽ ڪريو</string>
+    <string name="rta_dialog_cancel">بعد ۾</string>
+    <string name="rta_dialog_no">نه، مھرباني</string>
+
+</resources>

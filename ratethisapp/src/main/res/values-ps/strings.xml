@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">دا اپلیکیشن درجه بندي کړئ</string>
+    <string name="rta_dialog_message">که تاسو د دې اپلیکیشن کارول خوښوئ، نو مهرباني وکړئ یو لحظه وخت ونیسئ او دا درجه بندي کړئ؟ دا به له یوې دقیقې زیات وخت وانه خلي. ستاسو له ملاتړ څخه مننه!</string>
+    <string name="rta_dialog_ok">اوس درجه بندي کړئ</string>
+    <string name="rta_dialog_cancel">وروسته</string>
+    <string name="rta_dialog_no">نه، مننه</string>
+
+</resources>

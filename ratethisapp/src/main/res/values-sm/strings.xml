@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Fa\'atauaina le polokalame</string>
+    <string name="rta_dialog_message">Afai e te fiafia e fa\'aogaina lenei polokalame, e mafai ona e tuʻuina sina taimi e fa\'atauaina ai? E le sili atu i le tasi minute. Fa\'afetai mo lau lagolago!</string>
+    <string name="rta_dialog_ok">Fa\'atauaina loa</string>
+    <string name="rta_dialog_cancel">Mulimuli ane</string>
+    <string name="rta_dialog_no">Leai, fa\'afetai</string>
+
+</resources>

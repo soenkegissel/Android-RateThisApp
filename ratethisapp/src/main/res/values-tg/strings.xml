@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Барномаи моро баҳогузорӣ кунед</string>
+    <string name="rta_dialog_message">Агар ба шумо истифодаи ин барнома писанд бошад, метавонед як лаҳза вақт ҷудо карда, ба он баҳо диҳед? Ин зиёда аз як дақиқаро намегирад. Барои дастгирии шумо ташаккур!</string>
+    <string name="rta_dialog_ok">Ҳоло баҳогузорӣ кунед</string>
+    <string name="rta_dialog_cancel">Баъдтар</string>
+    <string name="rta_dialog_no">Не, ташаккур</string>
+
+</resources>

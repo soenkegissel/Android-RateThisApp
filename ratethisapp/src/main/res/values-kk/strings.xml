@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Қосымшаға баға беріңіз</string>
+    <string name="rta_dialog_message">Егер бұл қосымшаны пайдаланған ұнаса, оған баға беруге бір сәт уақытыңызды бөлесіз бе? Бұл бір минуттан көп уақыт алмайды. Қолдауыңызға рақмет!</string>
+    <string name="rta_dialog_ok">Қазір баға беру</string>
+    <string name="rta_dialog_cancel">Кейінірек</string>
+    <string name="rta_dialog_no">Жоқ, рақмет</string>
+
+</resources>

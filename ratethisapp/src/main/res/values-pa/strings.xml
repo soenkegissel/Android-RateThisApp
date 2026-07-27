@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">ਇਸ ਐਪ ਨੂੰ ਰੇਟ ਕਰੋ</string>
+    <string name="rta_dialog_message">ਜੇ ਤੁਸੀਂ ਇਸ ਐਪ ਨੂੰ ਵਰਤਣ ਵਿੱਚ ਆਨੰਦ ਮਾਣ ਰਹੇ ਹੋ, ਤਾਂ ਕੀ ਤੁਸੀਂ ਥੋੜ੍ਹਾ ਸਮਾਂ ਕੱਢ ਕੇ ਇਸ ਨੂੰ ਰੇਟ ਕਰਨਗੇ? ਇਹ ਇੱਕ ਮਿੰਟ ਤੋਂ ਵੱਧ ਨਹੀਂ ਲਵੇਗਾ। ਤੁਹਾਡੀ ਸਹਾਇਤਾ ਲਈ ਧੰਨਵਾਦ!</string>
+    <string name="rta_dialog_ok">ਹੁਣੇ ਰੇਟ ਕਰੋ</string>
+    <string name="rta_dialog_cancel">ਬਾਅਦ ਵਿੱਚ</string>
+    <string name="rta_dialog_no">ਨਹੀਂ, ਧੰਨਵਾਦ</string>
+
+</resources>

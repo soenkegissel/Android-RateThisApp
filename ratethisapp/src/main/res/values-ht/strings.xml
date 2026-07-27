@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Bay app sa a yon evalyasyon</string>
+    <string name="rta_dialog_message">Si ou renmen itilize app sa a, èske ou ta ka pran yon ti tan pou evalye li? Sa p ap pran plis pase yon minit. Mèsi pou sipò ou!</string>
+    <string name="rta_dialog_ok">Evalye kounye a</string>
+    <string name="rta_dialog_cancel">Pita</string>
+    <string name="rta_dialog_no">Non, mèsi</string>
+
+</resources>

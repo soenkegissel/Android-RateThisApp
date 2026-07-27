@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">ఈ యాప్‌ను రేట్ చేయండి</string>
+    <string name="rta_dialog_message">మీకు ఈ యాప్ ఉపయోగించడం నచ్చితే, దాన్ని రేట్ చేయడానికి కాస్త సమయం కేటాయిస్తారా? ఇది ఒక నిమిషం కూడా పట్టదు. మీ మద్దతుకు ధన్యవాదాలు!</string>
+    <string name="rta_dialog_ok">ఇప్పుడు రేట్ చేయండి</string>
+    <string name="rta_dialog_cancel">తరువాత</string>
+    <string name="rta_dialog_no">వద్దు, ధన్యవాదాలు</string>
+
+</resources>

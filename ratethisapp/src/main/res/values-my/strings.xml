@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">ဤအပ်ကို အဆင့်သတ်မှတ်ပါ</string>
+    <string name="rta_dialog_message">ဤအပ်ကို အသုံးပြုရတာ စိတ်တိုင်းကျနေပါက အချိန်တိုအနည်းငယ်ယူပြီး အဆင့်သတ်မှတ်ပေးပါမည်လား။ တစ်မိနစ်မကျော်ပါ။ သင်၏ထောက်ခံမှုအတွက် ကျေးဇူးတင်ပါတယ်။</string>
+    <string name="rta_dialog_ok">အခု အဆင့်သတ်မှတ်မည်</string>
+    <string name="rta_dialog_cancel">နောက်မှ</string>
+    <string name="rta_dialog_no">မလုပ်ဘူး၊ ကျေးဇူးတင်ပါတယ်</string>
+
+</resources>

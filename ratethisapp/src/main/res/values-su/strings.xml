@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Meunteun aplikasi ieu</string>
+    <string name="rta_dialog_message">Upami anjeun resep ngagunakeun aplikasi ieu, naha anjeun badé nyéépkeun waktos kanggo meunteunna? Moal nyéépkeun langkung ti sa-menit. Hatur nuhun kana dukungan anjeun!</string>
+    <string name="rta_dialog_ok">Meunteun ayeuna</string>
+    <string name="rta_dialog_cancel">Engké waé</string>
+    <string name="rta_dialog_no">Henteu, hatur nuhun</string>
+
+</resources>

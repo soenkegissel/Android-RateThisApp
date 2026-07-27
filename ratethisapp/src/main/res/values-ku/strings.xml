@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Ji kerema xwe vê sepanê bi rêz bidin</string>
+    <string name="rta_dialog_message">Heke ji bikaranîna vê sepanê kêfxweş bûn, dikarin demekî bidin da ku ew bi rêz bidin? Ew kêm ji yek deqê wê bibê. Spas ji bo piştgiriya we!</string>
+    <string name="rta_dialog_ok">Niha bi rêz bide</string>
+    <string name="rta_dialog_cancel">Paşê</string>
+    <string name="rta_dialog_no">Na, spas dikim</string>
+
+</resources>

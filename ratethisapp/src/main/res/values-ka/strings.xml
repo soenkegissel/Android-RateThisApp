@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">ಈ ಅಪ್‌ಗೆ ರೇಟಿಂಗ್ ನೀಡಿ</string>
+    <string name="rta_dialog_message">ನೀವು ಈ ಅಪ್ ಬಳಸುವುದನ್ನು ಆನಂದಿಸುತ್ತಿದ್ದರೆ, ಅದಕ್ಕೆ ರೇಟಿಂಗ್ ನೀಡಲು ಕ್ಷಣಕಾಲ ಬೇಕಾ? ಅದು ಒಂದು ನಿಮಿಷಕ್ಕೂ ಕಡಿಮೆ ಸಮಯ ತೆಗೆದುಕೊಳ್ಳುತ್ತದೆ. ನಿಮ್ಮ ಬೆಂಬಲಕ್ಕೆ ಧನ್ಯವಾದಗಳು!</string>
+    <string name="rta_dialog_ok">ಈಗ ರೇಟಿಂಗ್ ನೀಡಿ</string>
+    <string name="rta_dialog_cancel">ನಂತರ</string>
+    <string name="rta_dialog_no">ಇಲ್ಲ, ಧನ್ಯವಾದ</string>
+
+</resources>

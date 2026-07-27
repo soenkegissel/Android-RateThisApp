@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Qhia tus nqi rau daim app no</string>
+    <string name="rta_dialog_message">Yog koj nyiam siv daim app no, koj puas kam siv ib pliag los qhia tus nqi? Tsis yuav siv sijhawm tshaj ib feeb. Ua tsaug rau koj kev txhawb nqa!</string>
+    <string name="rta_dialog_ok">Qhia tus nqi tam sim no</string>
+    <string name="rta_dialog_cancel">Tom qab no</string>
+    <string name="rta_dialog_no">Tsis ua li, ua tsaug</string>
+
+</resources>

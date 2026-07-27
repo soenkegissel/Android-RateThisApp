@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Ku qiimee app-kan</string>
+    <string name="rta_dialog_message">Haddii aad ku raaxaysato isticmaalka app-kan, ma qaadan lahayd waqti yar si aad u qiimayso? Kaliya hal daqiiqo ayay qaadanaysaa. Waad ku mahadsan tahay taageeradaada!</string>
+    <string name="rta_dialog_ok">Qiimee hadda</string>
+    <string name="rta_dialog_cancel">Markale</string>
+    <string name="rta_dialog_no">Maya, mahadsanid</string>
+
+</resources>

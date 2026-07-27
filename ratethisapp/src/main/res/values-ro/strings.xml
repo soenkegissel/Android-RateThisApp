@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Evaluează această aplicație</string>
+    <string name="rta_dialog_message">Dacă îți place să folosești această aplicație, ai putea să acorzi un moment pentru a o evalua? Nu îți va lua mai mult de un minut. Îți mulțumim pentru sprijin!</string>
+    <string name="rta_dialog_ok">Evaluează acum</string>
+    <string name="rta_dialog_cancel">Mai târziu</string>
+    <string name="rta_dialog_no">Nu, mulțumesc</string>
+
+</resources>

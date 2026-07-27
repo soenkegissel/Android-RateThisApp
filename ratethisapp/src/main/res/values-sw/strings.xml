@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Kadiria programu hii</string>
+    <string name="rta_dialog_message">Kama unafurahia kutumia programu hii, ungependa kuchukua muda kidogo kuikadiria? Haitachukua zaidi ya dakika moja. Asante kwa msaada wako!</string>
+    <string name="rta_dialog_ok">Kadiria sasa</string>
+    <string name="rta_dialog_cancel">Baadaye</string>
+    <string name="rta_dialog_no">Hapana, asante</string>
+
+</resources>

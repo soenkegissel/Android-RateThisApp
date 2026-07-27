@@ -1,0 +1,7 @@
+<resources>
+    <string name="rta_dialog_title">Ацэніце гэтае прыкладанне</string>
+    <string name="rta_dialog_message">Калі вам падабаецца гэтае прыкладанне, ацаніце яго, калі ласка. Гэта зойме не больш за хвіліну. Дзякуй за вашу падтрымку!</string>
+    <string name="rta_dialog_ok">Ацаніць зараз</string>
+    <string name="rta_dialog_cancel">Пазней</string>
+    <string name="rta_dialog_no">Не, дзякуй</string>
+</resources>

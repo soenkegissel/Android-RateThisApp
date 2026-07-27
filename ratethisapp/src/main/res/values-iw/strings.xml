@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">דרג את האפליקציה</string>
+    <string name="rta_dialog_message">אם אתה נהנה להשתמש באפליקציה זו, תוכל לקחת רגע לדרג אותה? זה לא ייקח יותר מדקה. תודה על התמיכה!</string>
+    <string name="rta_dialog_ok">דרג עכשיו</string>
+    <string name="rta_dialog_cancel">מאוחר יותר</string>
+    <string name="rta_dialog_no">לא, תודה</string>
+
+</resources>

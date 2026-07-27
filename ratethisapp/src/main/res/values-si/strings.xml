@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">මෙම යෙදුම අගය කරන්න</string>
+    <string name="rta_dialog_message">ඔබට මෙම යෙදුම භාවිතා කිරීමට කැමති නම්, එය අගය කිරීමට මොහොතක් වෙන් කරන්න. එයට විනාඩියක් පමණක් ගතවේ. ඔබගේ සහය සඳහා ස්තුතියි!</string>
+    <string name="rta_dialog_ok">දැන් අගය කරන්න</string>
+    <string name="rta_dialog_cancel">පසුව</string>
+    <string name="rta_dialog_no">නැහැ, ස්තුතියි</string>
+
+</resources>

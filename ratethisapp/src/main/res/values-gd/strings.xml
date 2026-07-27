@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Rangachadh an aplacaid seo</string>
+    <string name="rta_dialog_message">Ma tha thu a’ còrdadh ris an aplacaid seo, am biodh e comasach dhut ùine ghoirid a ghabhail gus a rangachadh? Cha bheir e barrachd air mionaid. Tapadh leibh airson ur taic!</string>
+    <string name="rta_dialog_ok">Rangaich a-nis</string>
+    <string name="rta_dialog_cancel">Nas fhaide air adhart</string>
+    <string name="rta_dialog_no">Chan eil, tapadh leat</string>
+
+</resources>

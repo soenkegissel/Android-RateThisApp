@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Энэ аппыг үнэлнэ үү</string>
+    <string name="rta_dialog_message">Хэрэв танд энэ апп таалагдаж байвал, нэг минутын хугацаанд үнэлгээ өгч тусална уу? Энэ нь нэг минутаас илүү хугацаа авахгүй. Таны дэмжлэгт баярлалаа!</string>
+    <string name="rta_dialog_ok">Одоо үнэлэх</string>
+    <string name="rta_dialog_cancel">Дараа</string>
+    <string name="rta_dialog_no">Үгүй, баярлалаа</string>
+
+</resources>

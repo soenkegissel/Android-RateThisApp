@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Whakatauria tēnei taupānga</string>
+    <string name="rta_dialog_message">Mēnā he pai ki a koe tēnei taupānga, ka taea rānei e koe te wā poto ki te whakataurite i a ia? Kāore e roa ake i te kotahi meneti. Ngā mihi mō tō tautoko!</string>
+    <string name="rta_dialog_ok">Whakatauria ināianei</string>
+    <string name="rta_dialog_cancel">Ā muri ake</string>
+    <string name="rta_dialog_no">Kāo, mihi</string>
+
+</resources>

@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">हे अ‍ॅप रेट करा</string>
+    <string name="rta_dialog_message">तुम्हाला हे अ‍ॅप वापरण्यात आनंद होत असल्यास, कृपया थोडा वेळ काढून ते रेट कराल का? त्याला एका मिनिटापेक्षा जास्त वेळ लागणार नाही. तुमच्या पाठिंब्यासाठी धन्यवाद!</string>
+    <string name="rta_dialog_ok">आता रेट करा</string>
+    <string name="rta_dialog_cancel">नंतर</string>
+    <string name="rta_dialog_no">नको, धन्यवाद</string>
+
+</resources>

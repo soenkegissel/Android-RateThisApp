@@ -1,0 +1,7 @@
+<resources>
+    <string name="rta_dialog_title">Valutate sta app</string>
+    <string name="rta_dialog_message">Se ti piace aduprà sta app, ti dispiacerebbe di piglià un mumentu per valutalla? Ùn ci vole micca più di un minutu. Grazie per u to sustegnu!</string>
+    <string name="rta_dialog_ok">Valuta avà</string>
+    <string name="rta_dialog_cancel">Dopu</string>
+    <string name="rta_dialog_no">Innò, grazie</string>
+</resources>

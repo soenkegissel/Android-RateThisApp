@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">ໃຫ້ຄະແນນແອັບນີ້</string>
+    <string name="rta_dialog_message">ຖ້າທ່ານມີຄວາມພໍໃຈໃນການໃຊ້ແອັບນີ້ ກະລຸນາໃຫ້ຄະແນນມັນແຕ່ຕອນນີ້ໄດ້ບໍ? ບໍ່ໃຊ້ເວລາເກີນໜຶ່ງນາທີ. ຂອບໃຈສໍາລັບການສະໜັບສະໜູນ!</string>
+    <string name="rta_dialog_ok">ໃຫ້ຄະແນນດຽວນີ້</string>
+    <string name="rta_dialog_cancel">ໄວ້ທີຫຼັງ</string>
+    <string name="rta_dialog_no">ບໍ່, ຂອບໃຈ</string>
+
+</resources>

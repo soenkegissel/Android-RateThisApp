@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Sangira igitekerezo ku ishyirwa mu bikorwa</string>
+    <string name="rta_dialog_message">Niba wishimira gukoresha iyi porogaramu, waba wemera gutanga igitekerezo kuri yo? Ntibizatwara igihe kinini. Murakoze ku bufasha bwanyu!</string>
+    <string name="rta_dialog_ok">Tanga igitekerezo</string>
+    <string name="rta_dialog_cancel">Hanyuma</string>
+    <string name="rta_dialog_no">Oya, murakoze</string>
+
+</resources>

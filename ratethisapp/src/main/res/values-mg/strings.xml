@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Omeo naoty ity app ity</string>
+    <string name="rta_dialog_message">Raha tianao ity app ity, afaka mandany fotoana kely ve ianao hanome naoty azy? Tsy haharitra mihoatra ny iray minitra izany. Misaotra tamin\'ny fanohananao!</string>
+    <string name="rta_dialog_ok">Omeo naoty izao</string>
+    <string name="rta_dialog_cancel">Amin’ny manaraka</string>
+    <string name="rta_dialog_no">Tsia, misaotra</string>
+
+</resources>

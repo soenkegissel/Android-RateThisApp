@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Vurder denne appen</string>
+    <string name="rta_dialog_message">Hvis du liker å bruke denne appen, kan du ta et øyeblikk til å vurdere den? Det tar ikke mer enn ett minutt. Takk for støtten!</string>
+    <string name="rta_dialog_ok">Vurder nå</string>
+    <string name="rta_dialog_cancel">Senere</string>
+    <string name="rta_dialog_no">Nei takk</string>
+
+</resources>

@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Գնահատեք այս հավելվածը</string>
+    <string name="rta_dialog_message">Եթե ձեզ դուր է գալիս այս հավելվածը, կարո՞ղ եք մի պահ հատկացնել և գնահատել այն։ Դա կպահանջի ոչ ավելի, քան մեկ րոպե։ Շնորհակալություն ձեր աջակցության համար։</string>
+    <string name="rta_dialog_ok">Գնահատեք հիմա</string>
+    <string name="rta_dialog_cancel">Հետո</string>
+    <string name="rta_dialog_no">Ոչ, շնորհակալություն</string>
+
+</resources>

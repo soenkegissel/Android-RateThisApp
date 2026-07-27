@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Ka app no</string>
+    <string name="rta_dialog_message">Mi yɛ oyi app lɛ, gbɛjɛ ni wòtsɔŋ ni wòle ehiɛ shika? Eŋmɛ tsɔ shishi. Oyi ni ekome kɛji!</string>
+    <string name="rta_dialog_ok">Ka no</string>
+    <string name="rta_dialog_cancel">Dzo lɛ</string>
+    <string name="rta_dialog_no">Ayi, ake</string>
+
+</resources>

@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Ikkklassifika din l-app</string>
+    <string name="rta_dialog_message">Jekk qed tieħu pjaċir tuża din l-app, tistaʼ tieħu mument biex tikkklassifikaha? Ma tieħux aktar minn minuta. Grazzi talli qed tappoġġjana!</string>
+    <string name="rta_dialog_ok">Ikkklassifika issa</string>
+    <string name="rta_dialog_cancel">Aktar tard</string>
+    <string name="rta_dialog_no">Le, grazzi</string>
+
+</resources>

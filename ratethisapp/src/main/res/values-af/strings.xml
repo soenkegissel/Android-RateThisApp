@@ -1,0 +1,7 @@
+<resources>
+    <string name="rta_dialog_title">Gradeer hierdie app</string>
+    <string name="rta_dialog_message">As jy daarvan hou om hierdie app te gebruik, sal jy dalk \'n oomblik neem om dit te gradeer? Dit sal nie meer as \'n minuut neem nie. Dankie vir jou ondersteuning!</string>
+    <string name="rta_dialog_ok">Gradeer nou</string>
+    <string name="rta_dialog_cancel">Later</string>
+    <string name="rta_dialog_no">Nee, dankie</string>
+</resources>

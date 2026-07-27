@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Kimanta wannan manhaja</string>
+    <string name="rta_dialog_message">Idan kana jin dadin amfani da wannan manhaja, zaka iya ɗaukar lokaci ka kimanta ta? Ba zai ɗauki fiye da minti ɗaya ba. Na gode da goyon bayan ka!</string>
+    <string name="rta_dialog_ok">Kimanta yanzu</string>
+    <string name="rta_dialog_cancel">Daga baya</string>
+    <string name="rta_dialog_no">A\'a, na gode</string>
+
+</resources>

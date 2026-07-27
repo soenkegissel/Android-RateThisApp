@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Lekola app ena</string>
+    <string name="rta_dialog_message">Haeba u thabela ho sebelisa app ena, na u ka nka motsotso ho e lekola? Ha ho nke nako e fetang motsotso. Rea leboha ka tšehetso ea hau!</string>
+    <string name="rta_dialog_ok">Lekola hona joale</string>
+    <string name="rta_dialog_cancel">Hamorao</string>
+    <string name="rta_dialog_no">Che, kea leboha</string>
+
+</resources>

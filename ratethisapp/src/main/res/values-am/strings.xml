@@ -1,0 +1,7 @@
+<resources>
+    <string name="rta_dialog_title">ይህን መተግበሪያ ደምሩ</string>
+    <string name="rta_dialog_message">ይህን መተግበሪያ መጠቀም እንደምትወዱ ካሉ፣ ጥቂት ጊዜ ወስደው ደምሩት። ከአንድ ደቂቃ አይበልጥም። ለድጋፋችሁ እናመሰግናለን!</string>
+    <string name="rta_dialog_ok">አሁን ደምር</string>
+    <string name="rta_dialog_cancel">በኋላ</string>
+    <string name="rta_dialog_no">አይደለም፣ አመሰግናለሁ</string>
+</resources>

@@ -1,0 +1,7 @@
+<resources>
+    <string name="rta_dialog_title">امتیاز به این برنامه</string>
+    <string name="rta_dialog_message">اگر از این برنامه لذت می‌برید، لطفاً چند لحظه وقت بگذارید و به آن امتیاز دهید. این کار بیشتر از یک دقیقه طول نمی‌کشد. از حمایت شما سپاسگزاریم!</string>
+    <string name="rta_dialog_ok">اکنون امتیاز دهید</string>
+    <string name="rta_dialog_cancel">بعداً</string>
+    <string name="rta_dialog_no">نه، ممنون</string>
+</resources>

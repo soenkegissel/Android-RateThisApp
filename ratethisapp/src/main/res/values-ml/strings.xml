@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">ഈ ആപ്പ് റേറ്റ് ചെയ്യൂ</string>
+    <string name="rta_dialog_message">ഈ ആപ്പ് ഉപയോഗിക്കുന്നത് നിങ്ങൾക്ക് ഇഷ്ടമായാൽ, റേറ്റ് ചെയ്യാൻ ഒരു നിമിഷം എടുത്താലോ? അതിന് ഒരു മിനിറ്റ് പോലും വേണ്ടിവരില്ല. നിങ്ങളുടെ പിന്തുണയ്ക്ക് നന്ദി!</string>
+    <string name="rta_dialog_ok">ഇപ്പോൾ റേറ്റ് ചെയ്യൂ</string>
+    <string name="rta_dialog_cancel">പിന്നീട്</string>
+    <string name="rta_dialog_no">വേണ്ട, നന്ദി</string>
+
+</resources>

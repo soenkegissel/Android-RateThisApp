@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">E hōʻike i kēia polokalamu</string>
+    <string name="rta_dialog_message">Inā makemake ʻoe i kēia polokalamu, hiki iā ʻoe ke hoʻolako i kekahi manawa e hōʻike ai? ʻAʻole e ʻoi aʻe ma mua o hoʻokahi minuke. Mahalo no kou kākoʻo!</string>
+    <string name="rta_dialog_ok">Hōʻike i kēia manawa</string>
+    <string name="rta_dialog_cancel">Ma hope</string>
+    <string name="rta_dialog_no">ʻAʻole, mahalo</string>
+
+</resources>

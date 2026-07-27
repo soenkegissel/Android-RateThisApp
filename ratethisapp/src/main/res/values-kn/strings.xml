@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">ಈ ಅಪ್ಲಿಕೇಶನ್‌ಗೆ மதிப்பಳಿಸಿ</string>
+    <string name="rta_dialog_message">ನೀವು ಈ ಅಪ್ಲಿಕೇಶನ್ ಅನ್ನು ಉಪಯೋಗಿಸಿ ಆನಂದಿಸುತ್ತಿದ್ದರೆ, ದಯವಿಟ್ಟು ಇದಕ್ಕೆ ಒಂದು ನಿಮಿಷ ಸಮಯ ಕಳೆಯುವ ಮೂಲಕ ರೇಟಿಂಗ್ ನೀಡುತ್ತೀರಾ? ಇದಕ್ಕೆ ಒಂದು ನಿಮಿಷಕ್ಕಿಂತ ಹೆಚ್ಚು ಸಮಯ ತೆಗೆದುಕೊಳ್ಳುವುದಿಲ್ಲ. ನಿಮ್ಮ ಬೆಂಬಲಕ್ಕೆ ಧನ್ಯವಾದಗಳು!</string>
+    <string name="rta_dialog_ok">ಇದಲ್ಲದೆ ರೇಟಿಂಗ್ ನೀಡಿ</string>
+    <string name="rta_dialog_cancel">ನಂತರ</string>
+    <string name="rta_dialog_no">ಇಲ್ಲ, ಧನ್ಯವಾದ</string>
+
+</resources>

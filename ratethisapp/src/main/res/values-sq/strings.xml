@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Vlerësoni këtë aplikacion</string>
+    <string name="rta_dialog_message">Nëse ju pëlqen të përdorni këtë aplikacion, a do të kishit një moment për ta vlerësuar? Nuk do të zgjasë më shumë se një minutë. Faleminderit për mbështetjen tuaj!</string>
+    <string name="rta_dialog_ok">Vlerëso tani</string>
+    <string name="rta_dialog_cancel">Më vonë</string>
+    <string name="rta_dialog_no">Jo, faleminderit</string>
+
+</resources>

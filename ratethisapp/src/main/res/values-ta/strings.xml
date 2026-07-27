@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">இந்த செயலியை மதிப்பீடு செய்யவும்</string>
+    <string name="rta_dialog_message">இந்த செயலியைப் பயன்படுத்துவதில் மகிழ்ச்சி அடைந்தால், அதை மதிப்பீடு செய்ய ஒரு நிமிடம் செலவழிக்க விரும்புகிறீர்களா? இது ஒரு நிமிடத்திற்கும் குறைவாகவே இருக்கும். உங்கள் ஆதரவுக்கு நன்றி!</string>
+    <string name="rta_dialog_ok">இப்போது மதிப்பீடு செய்யவும்</string>
+    <string name="rta_dialog_cancel">பின்னர்</string>
+    <string name="rta_dialog_no">வேண்டாம், நன்றி</string>
+
+</resources>

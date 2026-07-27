@@ -1,0 +1,7 @@
+<resources>
+    <string name="rta_dialog_title">Taksi ĉi tiun aplikaĵon</string>
+    <string name="rta_dialog_message">Se vi ĝuas uzi ĉi tiun aplikaĵon, ĉu vi povus preni momenton por taksi ĝin? Ĝi ne daŭros pli ol minuton. Dankon pro via subteno!</string>
+    <string name="rta_dialog_ok">Taksi nun</string>
+    <string name="rta_dialog_cancel">Poste</string>
+    <string name="rta_dialog_no">Ne, dankon</string>
+</resources>

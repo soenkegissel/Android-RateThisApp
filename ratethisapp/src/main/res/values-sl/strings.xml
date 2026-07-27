@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Ocenite to aplikacijo</string>
+    <string name="rta_dialog_message">Če radi uporabljate to aplikacijo, bi si lahko vzeli trenutek in jo ocenili? Ne bo trajalo več kot minuto. Hvala za vašo podporo!</string>
+    <string name="rta_dialog_ok">Ocenite zdaj</string>
+    <string name="rta_dialog_cancel">Kasneje</string>
+    <string name="rta_dialog_no">Ne, hvala</string>
+
+</resources>

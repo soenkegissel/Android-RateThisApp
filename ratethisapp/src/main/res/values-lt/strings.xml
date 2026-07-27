@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Įvertinkite šią programėlę</string>
+    <string name="rta_dialog_message">Jei jums patinka ši programėlė, ar galėtumėte skirti akimirką ją įvertinti? Tai neužtruks ilgiau nei minutę. Ačiū už jūsų palaikymą!</string>
+    <string name="rta_dialog_ok">Įvertinti dabar</string>
+    <string name="rta_dialog_cancel">Vėliau</string>
+    <string name="rta_dialog_no">Ne, ačiū</string>
+
+</resources>

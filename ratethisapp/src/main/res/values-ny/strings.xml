@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Linganizani pulogalamuyi</string>
+    <string name="rta_dialog_message">Ngati mukusangalala kugwiritsa ntchito pulogalamuyi, mungatengereko nthawi pang\'ono kuti muyilinganize? Sizitenga mphindi kuposa imodzi. Zikomo chifukwa chothandizira!</string>
+    <string name="rta_dialog_ok">Linganizani tsopano</string>
+    <string name="rta_dialog_cancel">Pambuyo pake</string>
+    <string name="rta_dialog_no">Ayi, zikomo</string>
+
+</resources>

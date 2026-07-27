@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Tụnyere ngwa a</string>
+    <string name="rta_dialog_message">Ọ bụrụ na ị na-enwe ụtọ iji ngwa a, ị ga-achọ ịnọtụ oge iji tụnyere ya? Ọ gaghị ewere karịa otu nkeji. Daalụ maka nkwado gị!</string>
+    <string name="rta_dialog_ok">Tụnyere Ugbu a</string>
+    <string name="rta_dialog_cancel">Mezie Oge ọzọ</string>
+    <string name="rta_dialog_no">Mba, ekele</string>
+
+</resources>

@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="rta_dialog_title">Valora esta aplicación</string>
+    <string name="rta_dialog_message">Se che gusta usar esta aplicación, poderías dedicar un momento para valorala? Non levará máis dun minuto. Grazas polo teu apoio!</string>
+    <string name="rta_dialog_ok">Valorar agora</string>
+    <string name="rta_dialog_cancel">Despois</string>
+    <string name="rta_dialog_no">Non, grazas</string>
+
+</resources>
