@@ -1,9 +1,9 @@
 <resources>
 
-    <string name="rta_dialog_title">Ka app no</string>
-    <string name="rta_dialog_message">Mi yɛ oyi app lɛ, gbɛjɛ ni wòtsɔŋ ni wòle ehiɛ shika? Eŋmɛ tsɔ shishi. Oyi ni ekome kɛji!</string>
-    <string name="rta_dialog_ok">Ka no</string>
-    <string name="rta_dialog_cancel">Dzo lɛ</string>
-    <string name="rta_dialog_no">Ayi, ake</string>
+    <string name="rta_dialog_title">Rátáil an aip seo</string>
+    <string name="rta_dialog_message">Má bhaineann tú taitneamh as an aip seo, an miste leat nóiméad a thógáil chun í a rátáil? Ní thógfaidh sé níos mó ná nóiméad. Go raibh maith agat as do thacaíocht!</string>
+    <string name="rta_dialog_ok">Rátáil anois</string>
+    <string name="rta_dialog_cancel">Níos déanaí</string>
+    <string name="rta_dialog_no">Ní hea, go raibh maith agat</string>
 
 </resources>

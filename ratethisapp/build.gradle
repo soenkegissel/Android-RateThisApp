@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.library'
+    id 'maven-publish'
 }
 
 android {
@@ -8,8 +9,8 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 37
-        versionCode 1
-        versionName "2.0.0"
+        versionCode 3
+        versionName "2.0.2"
         aarMetadata {
             minCompileSdk = 24
         }
@@ -63,8 +64,8 @@ afterEvaluate {
             release(MavenPublication) {
                 from components.release
                 groupId = 'com.rucksack'
-                artifactId "ratethisapp"
-                version = '2.0.0'
+                artifactId = 'ratethisapp'
+                version = '2.0.2'
             }
         }
     }

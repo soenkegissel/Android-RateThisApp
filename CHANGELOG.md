@@ -1,5 +1,17 @@
 # Change Log
 
+## 2.0.2 (2026/11/04)
+
+- Bug fixes
+  - Fixed crash when the market app (e.g. Huawei AppGallery) or a browser is not installed.
+- Translations
+  - Fixed wrong languages in `zh-rCN`, `ga`, `ka` and `la`; fixed `kn`.
+  - Added `nb` (Norwegian Bokmål).
+  - Removed misspelled, unused `value-vi` folder.
+- Build
+  - Restored Maven publication and applied `maven-publish` in the library module.
+  - Added `jitpack.yml` (JDK 21).
+
 ## 2.0.0 (2026/07/27)
 
 - Modernization & Reliability

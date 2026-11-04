@@ -1,9 +1,9 @@
 <resources>
 
-    <string name="rta_dialog_title">Sangira igitekerezo ku ishyirwa mu bikorwa</string>
-    <string name="rta_dialog_message">Niba wishimira gukoresha iyi porogaramu, waba wemera gutanga igitekerezo kuri yo? Ntibizatwara igihe kinini. Murakoze ku bufasha bwanyu!</string>
-    <string name="rta_dialog_ok">Tanga igitekerezo</string>
-    <string name="rta_dialog_cancel">Hanyuma</string>
-    <string name="rta_dialog_no">Oya, murakoze</string>
+    <string name="rta_dialog_title">为此应用评分</string>
+    <string name="rta_dialog_message">如果您喜欢使用此应用，能否花点时间为它评分？这不会超过一分钟。感谢您的支持！</string>
+    <string name="rta_dialog_ok">立即评分</string>
+    <string name="rta_dialog_cancel">稍后再说</string>
+    <string name="rta_dialog_no">不用了，谢谢</string>
 
 </resources>

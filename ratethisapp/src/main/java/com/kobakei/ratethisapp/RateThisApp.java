@@ -445,19 +445,30 @@ public class RateThisApp implements Callback {
     }
 
     private void launchIntent(FragmentActivity activity, String url, String appPackage) {
+        if (startViewIntent(activity, url)) {
+            return;
+        }
+        // Market app not installed, fallback to web url if the market has one.
+        String webUrl = getWebURL(mMarket, appPackage);
+        if (webUrl == null || !startViewIntent(activity, webUrl)) {
+            Log.e(TAG, "Unable to open market or web url for " + appPackage + " (" + mMarket + ")");
+        }
+    }
+
+    private boolean startViewIntent(FragmentActivity activity, String url) {
         try {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             activity.startActivity(intent);
-
+            return true;
         } catch (android.content.ActivityNotFoundException anfe) {
-            url = getWebURL(mMarket, appPackage);
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            activity.startActivity(intent);
+            return false;
         }
     }
 
+    /**
+     * @return web url of the market or null if the market does not support web rating by package name.
+     */
     private String getWebURL(Market market, String appPackage) {
         switch (market) {
             case AMAZON:
@@ -465,11 +476,12 @@ public class RateThisApp implements Callback {
             case GOOGLE:
                 return WEB_GOOGLE_URL + appPackage;
             case HUAWEI:
-                throw new UnableToFindMarketException("Huawei does not support web rating by packagename");
+                // Huawei does not support web rating by packagename
+                return null;
             case SAMSUNG:
                 return WEB_SAMSUNG_URL + appPackage;
             default:
-                return "";
+                return null;
         }
     }
 
