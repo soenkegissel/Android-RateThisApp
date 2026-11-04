@@ -13,7 +13,16 @@ android {
         }
     }
 
-    testOptions.unitTests.includeAndroidResources = true
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+            all {
+                // Robolectric needs access to java.io internals on newer JDKs.
+                jvmArgs '--add-opens=java.base/java.io=ALL-UNNAMED',
+                        '--add-exports=java.base/jdk.internal.access=ALL-UNNAMED'
+            }
+        }
+    }
 
     buildTypes {
         release {
