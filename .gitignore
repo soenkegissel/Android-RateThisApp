@@ -27,3 +27,6 @@ local.properties
 .idea/
 
 .DS_Store
+
+# Daemon JVM criteria (JetBrains JDK) break JitPack builds
+gradle/gradle-daemon-jvm.properties
