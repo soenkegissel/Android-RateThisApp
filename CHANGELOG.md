@@ -1,6 +1,6 @@
 # Change Log
 
-## 2.0.2 (2026/11/04)
+## 2.1.0 (2026/11/04)
 
 - Bug fixes
   - Fixed crash when the market app (e.g. Huawei AppGallery) or a browser is not installed.

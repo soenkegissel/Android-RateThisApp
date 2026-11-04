@@ -25,7 +25,7 @@ repositories {
 
 ```groovy
 dependencies {
-    implementation 'com.github.soenkegissel:Android-RateThisApp:2.0.2'
+    implementation 'com.github.soenkegissel:Android-RateThisApp:2.1.0'
 }
 ```
 
