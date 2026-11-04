@@ -20,22 +20,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.play.core.review.ReviewInfo;
 import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
 import com.google.android.play.core.review.testing.FakeReviewManager;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
-import com.rucksack.ratethisapp.BuildConfig;
 
 import java.lang.ref.WeakReference;
 import java.util.Date;
@@ -53,15 +50,15 @@ public class RateThisApp implements Callback {
     private static final String TAG = RateThisApp.class.getSimpleName();
 
     public static final String MARKET_AMAZON_URL = "amzn://apps/android?p=";
-    public static final String WEB_AMAZON_URL = "http://www.amazon.com/gp/mas/dl/android?p=";
+    public static final String WEB_AMAZON_URL = "https://www.amazon.com/gp/mas/dl/android?p=";
 
     public static final String MARKET_HUAWEI_URL = "appmarket://details?id=";
 
     public static final String MARKET_GOOGLE_URL = "market://details?id=";
-    public static final String WEB_GOOGLE_URL = "http://play.google.com/store/apps/details?id=";
+    public static final String WEB_GOOGLE_URL = "https://play.google.com/store/apps/details?id=";
 
     public static final String MARKET_SAMSUNG_URL = "samsungapps://ProductDetail/";
-    public static final String WEB_SAMSUNG_URL = "http://www.samsungapps.com/appquery/appDetail.as?appId=";
+    public static final String WEB_SAMSUNG_URL = "https://galaxystore.samsung.com/detail/";
 
 
     private static final String PREF_NAME = "RateThisApp";
@@ -69,11 +66,13 @@ public class RateThisApp implements Callback {
     private static final String KEY_LAUNCH_TIMES = "rta_launch_times";
     private static final String KEY_OPT_OUT = "rta_opt_out";
     private static final String KEY_ASK_LATER_DATE = "rta_ask_later_date";
+    private static final String KEY_DIALOG_SHOWN = "rta_dialog_shown";
 
     private Date mInstallDate;
     private Date mAskLaterDate;
     private int mLaunchTimes;
     private boolean mOptOut;
+    private boolean mDialogShown;
 
     private final Config sConfig;
     private Callback sCallback;
@@ -82,9 +81,9 @@ public class RateThisApp implements Callback {
     private final Context mContext;
 
     private final Market mMarket;
+    private final boolean mDebug;
 
     private final ReviewManager mReviewManager;
-    private ReviewInfo mReviewInfo;
 
     //https://de.wikibooks.org/wiki/Muster:_Java:_Singleton
     @SuppressLint("StaticFieldLeak")
@@ -94,8 +93,10 @@ public class RateThisApp implements Callback {
         this.mContext = context;
         this.sConfig = config;
         this.mMarket = market;
+        // BuildConfig.DEBUG of a library is always false in the published aar, so use the app's flag.
+        this.mDebug = (context.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
 
-        if (market == Market.GOOGLE && (BuildConfig.DEBUG || config.isUseFakeReviewManager())) {
+        if (market == Market.GOOGLE && (mDebug || config.isUseFakeReviewManager())) {
             this.mReviewManager = new FakeReviewManager(mContext);
         } else if (market == Market.GOOGLE) {
             this.mReviewManager = ReviewManagerFactory.create(mContext);
@@ -106,6 +107,10 @@ public class RateThisApp implements Callback {
         setup();
     }
 
+    /**
+     * Initialize RateThisApp. Call this once from your Application class.
+     * Subsequent calls return the existing instance and ignore the given config and market.
+     */
     public static synchronized RateThisApp initialize(Context context, Config config, Market market) {
         if (INSTANCE == null) {
             Context applicationContext;
@@ -115,6 +120,8 @@ public class RateThisApp implements Callback {
                 applicationContext = context.getApplicationContext();
             }
             INSTANCE = new RateThisApp(applicationContext, config, market);
+        } else {
+            Log.w(TAG, "RateThisApp is already initialized. Ignoring new config and market.");
         }
         return INSTANCE;
     }
@@ -124,20 +131,27 @@ public class RateThisApp implements Callback {
     }
 
     /**
-     * Initialize using BuildConfig.MARKET
+     * Initialize with default config and Google Play as market.
+     * @deprecated The library cannot read the BuildConfig.MARKET of your app, so this always uses
+     * {@link Market#GOOGLE}. Use {@link #initialize(Context, Config, Market)} with
+     * {@code Market.fromName(BuildConfig.MARKET)} instead.
      */
+    @Deprecated
     public static RateThisApp initialize(Context context) {
-        Market market = Market.fromName(BuildConfig.MARKET);
-        return initialize(context, market);
+        return initialize(context, Market.GOOGLE);
     }
 
     public static RateThisApp getInstance(FragmentActivity fragmentActivity) {
         if(INSTANCE == null) {
-            throw new NullPointerException("RateThisApp not initialized. Call RateThisApp.initalize(Context) from your application class.");
+            throw new IllegalStateException("RateThisApp not initialized. Call RateThisApp.initialize(Context, Config, Market) from your application class.");
         }
         INSTANCE.mActivityRef = new WeakReference<>(fragmentActivity);
 
         return RateThisApp.INSTANCE;
+    }
+
+    static RateThisApp getInstanceOrNull() {
+        return INSTANCE;
     }
 
     private FragmentActivity getActivity() {
@@ -147,6 +161,8 @@ public class RateThisApp implements Callback {
     /**
      * Set callback INSTANCE.
      * The callback will receive yes/no/later events.
+     * The callback is held by the singleton, so remove it with setCallback(null) in onDestroy()
+     * if it references an Activity.
      * @param callback
      */
     public void setCallback(Callback callback) {
@@ -154,8 +170,7 @@ public class RateThisApp implements Callback {
     }
 
     /**
-     * Call this API when the launcher activity is launched.<br>
-     * It is best to call this API in onCreate() of the launcher activity.
+     * Called once per process start from initialize().
      */
     private void setup() {
         SharedPreferences pref = mContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
@@ -173,7 +188,7 @@ public class RateThisApp implements Callback {
 
         setObjects(pref);
 
-        if(BuildConfig.DEBUG)
+        if(mDebug)
             printStatus();
     }
 
@@ -182,6 +197,7 @@ public class RateThisApp implements Callback {
         mLaunchTimes = pref.getInt(KEY_LAUNCH_TIMES, 0);
         mOptOut = pref.getBoolean(KEY_OPT_OUT, false);
         mAskLaterDate = new Date(pref.getLong(KEY_ASK_LATER_DATE, 0));
+        mDialogShown = pref.getBoolean(KEY_DIALOG_SHOWN, false);
     }
 
     /**
@@ -204,12 +220,8 @@ public class RateThisApp implements Callback {
             return false;
         }
 
-        if(forceDialog) {
-            showRateDialog(activity, themeId);
-            return true;
-        } else if (shouldShowRateDialog(sConfig.getmOperator())) {
-            showRateDialog(activity, themeId);
-            return true;
+        if(forceDialog || shouldShowRateDialog(sConfig.getmOperator())) {
+            return showRateDialog(activity, themeId);
         } else {
             return false;
         }
@@ -217,8 +229,6 @@ public class RateThisApp implements Callback {
 
     /**
      * Check whether the rate dialog should be shown or not.
-     * Developers may call this method directly if they want to show their own view instead of
-     * dialog provided by this library.
      * @return
      * @param operator
      * GISSEL Add an Operator enum ADD/OR for launchTimes and launchDate.
@@ -245,12 +255,20 @@ public class RateThisApp implements Callback {
      * Show the rate dialog
      * @param activity
      * @param themeId
+     * @return true if shown, false if already showing or the activity state is already saved.
      */
-    private void showRateDialog(final FragmentActivity activity, int themeId) {
-        DialogFragment newFragment = DialogFragment.newInstance(
-                sConfig, themeId);
-        newFragment.setCallback(this);
-        newFragment.show(activity.getSupportFragmentManager(), "dialog");
+    private boolean showRateDialog(final FragmentActivity activity, int themeId) {
+        FragmentManager fragmentManager = activity.getSupportFragmentManager();
+        if (fragmentManager.isStateSaved()) {
+            Log.w(TAG, "Activity state already saved. Cannot show dialog.");
+            return false;
+        }
+        if (fragmentManager.findFragmentByTag(RateDialogFragment.TAG) != null) {
+            return false;
+        }
+        RateDialogFragment.newInstance(sConfig, themeId).show(fragmentManager, RateDialogFragment.TAG);
+        setDialogShown();
+        return true;
     }
 
     /**
@@ -261,7 +279,7 @@ public class RateThisApp implements Callback {
     }
 
     /**
-     * Get count number of the rate dialog launches
+     * Get the number of app launches (process starts) since install or the last "Later".
      * @return Time the app is launched
      */
     public int getLaunchCount(){
@@ -298,7 +316,7 @@ public class RateThisApp implements Callback {
      * @return true if shown, false if not shown.
      */
     public boolean getDialogShown() {
-        return getOptOut();
+        return mDialogShown;
     }
 
     public Config getConfig() {
@@ -306,17 +324,17 @@ public class RateThisApp implements Callback {
     }
 
     /**
-     * Clear data in shared preferences.<br>
+     * Reset the launch times and store the date the user asked for being asked again later.<br>
      * This API is called when the "Later" is pressed or canceled.
      */
-    private void clearSharedPreferences() {
+    private void storeAskLater() {
         SharedPreferences pref = mContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         Editor editor = pref.edit();
-        editor.remove(KEY_INSTALL_DATE);
-        editor.remove(KEY_LAUNCH_TIMES);
-
-        if(editor.commit())
-            setObjects(pref);
+        editor.putInt(KEY_LAUNCH_TIMES, 0);
+        editor.putLong(KEY_ASK_LATER_DATE, System.currentTimeMillis());
+        editor.apply();
+        mLaunchTimes = 0;
+        mAskLaterDate = new Date(pref.getLong(KEY_ASK_LATER_DATE, 0));
     }
 
     /**
@@ -331,6 +349,12 @@ public class RateThisApp implements Callback {
         editor.putBoolean(KEY_OPT_OUT, optOut);
         editor.apply();
         mOptOut = optOut;
+    }
+
+    private void setDialogShown() {
+        SharedPreferences pref = mContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        pref.edit().putBoolean(KEY_DIALOG_SHOWN, true).apply();
+        mDialogShown = true;
     }
 
     /**
@@ -351,16 +375,6 @@ public class RateThisApp implements Callback {
     }
 
     /**
-     * Store the date the user asked for being asked again later.
-     */
-    private void storeAskLaterDate() {
-        SharedPreferences pref = mContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-        Editor editor = pref.edit();
-        editor.putLong(KEY_ASK_LATER_DATE, System.currentTimeMillis());
-        editor.apply();
-    }
-
-    /**
      * Print values in SharedPreferences (used for debug)
      */
     private void printStatus() {
@@ -378,11 +392,11 @@ public class RateThisApp implements Callback {
     }
 
     /**
-     * Print log if enabled
+     * Print log if the app is debuggable
      * @param message
      */
     private void log(String message) {
-        if (BuildConfig.DEBUG) {
+        if (mDebug) {
             Log.v(TAG, message);
         }
     }
@@ -394,54 +408,50 @@ public class RateThisApp implements Callback {
             Log.e(TAG, "Activity is null. Cannot handle Yes click.");
             return;
         }
+        onYesClicked(activity);
+    }
 
-        String appPackage = activity.getPackageName();
-        String url = getMarketURL(mMarket, appPackage);
+    /**
+     * Handle the "Rate now" click with the activity currently hosting the dialog.
+     */
+    void onYesClicked(final FragmentActivity activity) {
+        final String appPackage = activity.getPackageName();
+        final String url = sConfig.getmUrl() != null ? sConfig.getmUrl() : getMarketURL(mMarket, appPackage);
 
         if(mMarket.equals(Market.GOOGLE)) {
-            final String finalUrl = url;
-            mReviewManager.requestReviewFlow().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    // We can get the ReviewInfo object
-                    mReviewInfo = task.getResult();
-                    Log.d("ReviewManager", "onYesClicked. ReviewInfo: " + mReviewInfo);
-                    mReviewManager.launchReviewFlow(activity, mReviewInfo)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            // The flow has finished.
-                            Log.d("ReviewManager", "Flow Completed.");
-                            if (sCallback != null) {
-                                sCallback.onYesClicked();
-                            }
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(Exception e) {
-                            Log.e("ReviewManager", "Flow failed. Exception: " + e.getMessage());
-                            // Fallback to market URL if possible
-                            launchIntent(activity, finalUrl, appPackage);
-                            if (sCallback != null) {
-                                sCallback.onYesClicked();
-                            }
-                        }
-                    });
-                } else {
+            mReviewManager.requestReviewFlow().addOnCompleteListener(requestTask -> {
+                if (!requestTask.isSuccessful() || activity.isFinishing() || activity.isDestroyed()) {
                     // There was some problem, fallback to market URL.
-                    launchIntent(activity, finalUrl, appPackage);
-                    if (sCallback != null) {
-                        sCallback.onYesClicked();
-                    }
+                    log("Review flow not available, fallback to market url.");
+                    launchIntent(activity, url, appPackage);
+                    notifyYes();
+                    return;
                 }
+                ReviewInfo reviewInfo = requestTask.getResult();
+                log("onYesClicked. ReviewInfo: " + reviewInfo);
+                mReviewManager.launchReviewFlow(activity, reviewInfo).addOnCompleteListener(launchTask -> {
+                    if (!launchTask.isSuccessful()) {
+                        log("Review flow failed, fallback to market url.");
+                        launchIntent(activity, url, appPackage);
+                    } else {
+                        // The flow has finished. Google does not tell if the user actually rated.
+                        log("Review flow completed.");
+                    }
+                    notifyYes();
+                });
             });
         }
         else {
             launchIntent(activity, url, appPackage);
-            if (sCallback != null) {
-                sCallback.onYesClicked();
-            }
+            notifyYes();
         }
         setOptOut(true);
+    }
+
+    private void notifyYes() {
+        if (sCallback != null) {
+            sCallback.onYesClicked();
+        }
     }
 
     private void launchIntent(FragmentActivity activity, String url, String appPackage) {
@@ -513,8 +523,7 @@ public class RateThisApp implements Callback {
         if (sCallback != null) {
             sCallback.onLaterClicked();
         }
-        clearSharedPreferences();
-        storeAskLaterDate();
+        storeAskLater();
     }
 
 

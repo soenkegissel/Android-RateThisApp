@@ -4,13 +4,30 @@
 
 - Bug fixes
   - Fixed crash when the market app (e.g. Huawei AppGallery) or a browser is not installed.
+  - Dialog buttons keep working after rotation / process recreation.
+  - Back key / touch outside now reliably counts as "Later".
+  - Dialog is no longer shown twice and is not shown after the activity state was saved.
+  - "Later" no longer re-shows the dialog immediately in the same session.
+  - Google review fallback no longer calls `onYesClicked` twice.
+  - `Config` now keeps all values when parcelled; `Config.setUrl()` is used.
+  - `getDialogShown()` now reports whether the dialog was shown.
+  - Debug logging and `FakeReviewManager` now depend on the app being debuggable, not on the library build.
+  - `Market.fromName()` is locale independent.
+  - Web urls use https, Samsung uses the Galaxy Store url.
+- API
+  - `RateThisApp.initialize(Context)` is deprecated (always used Google Play).
+  - `getInstance()` throws `IllegalStateException` instead of `NullPointerException` if not initialized.
+  - `DialogFragment` renamed to `RateDialogFragment`.
 - Translations
   - Fixed wrong languages in `zh-rCN`, `ga`, `ka` and `la`; fixed `kn`.
+  - Fixed `ar`, `de`, `fi`, `fr`, `hmn`, `hr`, `hu`, `is`, `ko`, `ku`, `mi`, `mt`, `ne`, `nl`, `zh`; European Portuguese for `pt`.
   - Added `nb` (Norwegian Bokmål).
   - Removed misspelled, unused `value-vi` folder.
 - Build
   - Restored Maven publication and applied `maven-publish` in the library module.
   - Added `jitpack.yml` (JDK 21).
+  - Updated AGP 9.5.0, Gradle 9.8.2, appcompat 1.8.0, Robolectric 4.17; removed unused Kotlin dependencies.
+  - Updated CircleCI config.
 
 ## 2.0.0 (2026/07/27)
 

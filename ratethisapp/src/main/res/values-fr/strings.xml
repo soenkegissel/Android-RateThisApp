@@ -2,7 +2,7 @@
 
     <string name="rta_dialog_title">Noter cette application</string>
     <string name="rta_dialog_message">Si vous appréciez cette application, veuillez prendre un moment pour la noter. Cela ne prendra qu\'une minute. Merci de votre participation !</string>
-    <string name="rta_dialog_ok">Maintenant</string>
+    <string name="rta_dialog_ok">Noter maintenant</string>
     <string name="rta_dialog_cancel">Plus tard</string>
     <string name="rta_dialog_no">Non, merci</string>
 

@@ -44,11 +44,12 @@ public class Config implements Parcelable {
     public Config(int criteriaInstallDays, int criteriaLaunchTimes, Operator operator) {
         this.mCriteriaInstallDays = criteriaInstallDays;
         this.mCriteriaLaunchTimes = criteriaLaunchTimes;
-        this.mOperator = operator;
+        this.mOperator = operator != null ? operator : Operator.OR;
     }
 
     /**
      * Set navigation url when user clicks rate button.
+     * If set, this url is opened instead of the market url (for Google Play only if the in-app review flow fails).
      * Typically, url will be https://play.google.com/store/apps/details?id=PACKAGE_NAME for Google Play.
      * @param url
      */
@@ -94,7 +95,11 @@ public class Config implements Parcelable {
 
     // Parcelling part
     protected Config(Parcel in){
+        mUrl = in.readString();
+        mCriteriaInstallDays = in.readInt();
+        mCriteriaLaunchTimes = in.readInt();
         mCancelMode = in.readInt();
+        mOperator = Operator.values()[in.readInt()];
         mUseFakeReviewManager = in.readByte() != 0;
     }
 
@@ -105,7 +110,11 @@ public class Config implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mUrl);
+        dest.writeInt(mCriteriaInstallDays);
+        dest.writeInt(mCriteriaLaunchTimes);
         dest.writeInt(mCancelMode);
+        dest.writeInt(mOperator.ordinal());
         dest.writeByte((byte) (mUseFakeReviewManager ? 1 : 0));
     }
 

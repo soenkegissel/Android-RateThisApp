@@ -1,8 +1,8 @@
 <resources>
 
     <string name="rta_dialog_title">Arvostele sovellus</string>
-    <string name="rta_dialog_message">Jos tykkäät sovelluksesta, ole hyvä ja arvostelese? Kiitos tuestasi!</string>
-    <string name="rta_dialog_ok">Arvostele</string>
+    <string name="rta_dialog_message">Jos pidät tästä sovelluksesta, voisitko käyttää hetken sen arvosteluun? Se ei vie minuuttia kauempaa. Kiitos tuestasi!</string>
+    <string name="rta_dialog_ok">Arvostele nyt</string>
     <string name="rta_dialog_cancel">Myöhemmin</string>
     <string name="rta_dialog_no">Ei kiitos</string>
 

@@ -103,4 +103,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onDestroy() {
+        // The callback references this activity, so don't let the singleton keep it.
+        rateThisApp.setCallback(null);
+        super.onDestroy();
+    }
 }

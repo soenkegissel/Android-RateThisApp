@@ -1,14 +1,14 @@
 Android-RateThisApp - ENHANCED
 ===================
 
-Android-RateThisApp is an library to show "Rate this app" dialog ENHANCED.
+Android-RateThisApp is a library to show "Rate this app" dialog ENHANCED.
 
 <img src="https://github.com/soenkegissel/Android-RateThisApp/blob/master/Screenshot_20260727-084521.png" alt="drawing" width="360"/>
 
 The library monitors the following status
 
 * How many times is the app launched
-* How long days does it take from the app installation
+* How many days have passed since the app was installed
 * **Works with all app markets (GOOGLE, AMAZON, SAMSUNG, HUAWEI)**
 
 and show a dialog to engage users to rate the app in Google Play, Amazon AppStore, Samsung Galaxy and Huawei.
@@ -33,7 +33,7 @@ dependencies {
 
 ### Application class
 
-Initialize RateThisApp on Application start. 
+Initialize RateThisApp once on Application start. Further calls of `initialize` are ignored.
 ```java
 public class MainApplication extends Application {
     
@@ -45,9 +45,10 @@ public class MainApplication extends Application {
         RateThisApp.initialize(this, Market.SAMSUNG);
         
         //Use with custom config and Google as Market.
-        RateThisApp.initialize(this, new Config(3, 5), Market.GOOGLE);
+        Config config = new Config(3, 5, Config.Operator.OR);
+        RateThisApp.initialize(this, config, Market.GOOGLE);
         
-        //Use with Gradle buildConfigField
+        //Use with Gradle buildConfigField of your app (see below)
         RateThisApp.initialize(this, config, Market.fromName(BuildConfig.MARKET));
     }
 }
@@ -60,7 +61,7 @@ To support multiple markets efficiently, define a `flavorDimension` and `product
 ```groovy
 android {
     ...
-    flavorDimensions "vendor"
+    flavorDimensions = ["vendor"]
     productFlavors {
         google {
             dimension "vendor"
@@ -87,8 +88,6 @@ android {
 The most simple setup is to show the dialog if conditions match.
 
 ```java
-
-@Override
 private void ratingMethod() {
     RateThisApp.getInstance(this).showRateDialogIfNeeded(false);
 }
@@ -115,10 +114,10 @@ RateThisApp.getInstance(this).showRateDialogIfNeeded(R.style.MyAlertDialogStyle2
 
 ### Custom condition
 
-In default, the dialog will be shown when **any off** (usage of Operator.OR) or **all off** (usage of Operator.AND) the following conditions is satisfied.
+In default, the dialog will be shown when **any of** (usage of Operator.OR) or **all of** (usage of Operator.AND) the following conditions are satisfied.
 
-* App is launched after 7 days than installation.
-* App is launched more than 10 times
+* App is launched 7 days or more after installation (or after the user pressed "Later").
+* App is launched 10 times or more (process starts, counted since installation or the last "Later").
 
 If you want to use your own condition, call `Config config = new Config(3,5, Config.Operator.AND)` 
 in your Application class method.
@@ -142,7 +141,7 @@ public class MainApplication extends Application {
 
 You can override title, message and button labels in your values.xml.
 
-```java
+```xml
     <string name="rta_dialog_title">My custom title</string>
     <string name="rta_dialog_message">My custom message</string>
     <string name="rta_dialog_ok">Rate me</string>
@@ -163,7 +162,7 @@ RateThisApp.getInstance(this).stopRateDialog();
 You can receive yes/no/cancel button click events.
 
 ```java
-RateThisApp.getInstance(this).setCallback(new RateThisApp.Callback() {
+RateThisApp.getInstance(this).setCallback(new Callback() {
     @Override
     public void onYesClicked() {
         Toast.makeText(MainActivity.this, "Yes event", Toast.LENGTH_SHORT).show();
@@ -181,9 +180,20 @@ RateThisApp.getInstance(this).setCallback(new RateThisApp.Callback() {
 });
 ```
 
+The callback is kept by the RateThisApp singleton. If it references your Activity, call
+`RateThisApp.getInstance(this).setCallback(null)` in `onDestroy()`.
+
+### Google Play In-App Review
+
+For `Market.GOOGLE` the "Rate now" button starts the Google Play In-App Review flow and falls back to the
+Play Store if the flow is not available. Google decides whether the review card is actually shown (quota),
+and Google's guidelines discourage asking questions before the review flow – keep that in mind when
+customizing the dialog text. In debuggable builds or with `config.setUseFakeReviewManager(true)` the
+`FakeReviewManager` is used.
+
 ## Contribute this project
 
-If you want to contribute this project, please send pull request.
+If you want to contribute to this project, please send pull request.
 In present, I need contributors who can translate resources from English/German into other languages.
 
 ## License
