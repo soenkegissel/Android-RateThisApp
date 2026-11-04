@@ -1,7 +1,7 @@
 <resources>
 
     <string name="rta_dialog_title">Aestima hanc applicationem</string>
-    <string name="rta_dialog_message">Si hac applicatione uti tibi placet, visne paulisper eam aestimare? Non plus quam unum minutum sumet. Gratias tibi agimus pro auxilio tuo!</string>
+    <string name="rta_dialog_message">Si hac applicatione uti tibi placet, visne paulisper eam aestimare? Non plus quam unum minutum requiret. Gratias tibi agimus pro auxilio tuo!</string>
     <string name="rta_dialog_ok">Aestima nunc</string>
     <string name="rta_dialog_cancel">Postea</string>
     <string name="rta_dialog_no">Minime, gratias</string>
