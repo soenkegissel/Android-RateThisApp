@@ -1,5 +1,10 @@
 # Change Log
 
+## 2.1.1 (2026/11/04)
+
+- Build
+  - Fixed JitPack build (2.1.0 was not published).
+
 ## 2.1.0 (2026/11/04)
 
 - Bug fixes
