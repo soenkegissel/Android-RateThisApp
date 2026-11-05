@@ -102,6 +102,16 @@ public class MainActivity extends AppCompatActivity {
                 rateThisApp.showRateDialogIfNeeded(false);
             }
         });
+
+        Button button4 = (Button) findViewById(R.id.button4);
+        button4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // "Rate" button, e.g. in the settings: open the store page directly,
+                // because Google may silently ignore the In-App Review flow.
+                rateThisApp.openStorePage(MainActivity.this);
+            }
+        });
     }
 
     @Override

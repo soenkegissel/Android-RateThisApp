@@ -49,6 +49,13 @@
                 android:layout_marginTop="8dp"
                 android:text="@string/only_if_criteria_match_rate_dialog" />
 
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/open_store_page" />
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
