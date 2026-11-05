@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.2.0 (2026/11/05)
+
+- API
+  - Added `RateThisApp.openStorePage(FragmentActivity)` to open the store page directly, without the
+    dialog and without the In-App Review flow (e.g. for a "Rate" button in the settings).
+
 ## 2.1.1 (2026/11/04)
 
 - Build

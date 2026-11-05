@@ -493,6 +493,77 @@ public class RateThisAppTest {
         assertTrue(rateThisApp.getOptOut());
     }
 
+    // endregion
+
+    // region openStorePage
+
+    @Test
+    public void openStorePage_google_opensMarketUrlWithoutReviewFlow() {
+        givenState(0, 0);
+        Config config = new Config();
+        config.setUseFakeReviewManager(true);
+        RateThisApp rateThisApp = init(config, Market.GOOGLE);
+
+        rateThisApp.openStorePage(controller.get());
+
+        Intent intent = shadowOf(RuntimeEnvironment.getApplication()).getNextStartedActivity();
+        assertNotNull(intent);
+        assertEquals(RateThisApp.MARKET_GOOGLE_URL + context.getPackageName(), intent.getDataString());
+        assertEquals(1, callback.yes);
+        assertTrue(rateThisApp.getOptOut());
+        assertTrue(prefs().getBoolean(KEY_OPT_OUT, false));
+        assertFalse(rateThisApp.getDialogShown());
+        assertNull(dialogFragment());
+    }
+
+    @Test
+    public void openStorePage_customUrl_isOpened() {
+        Config config = new Config();
+        config.setUrl("https://example.com/rate");
+        RateThisApp rateThisApp = init(config, Market.GOOGLE);
+
+        rateThisApp.openStorePage(controller.get());
+
+        Intent intent = shadowOf(RuntimeEnvironment.getApplication()).getNextStartedActivity();
+        assertEquals("https://example.com/rate", intent.getDataString());
+    }
+
+    @Test
+    public void openStorePage_optsOutOfAutomaticDialog() {
+        givenState(0, 20);
+        RateThisApp rateThisApp = init(new Config());
+
+        rateThisApp.openStorePage(controller.get());
+
+        assertFalse(rateThisApp.showRateDialogIfNeeded(false));
+    }
+
+    @Test
+    public void openStorePage_huaweiWithoutAppGallery_doesNotCrash() {
+        RateThisApp rateThisApp = init(new Config(), Market.HUAWEI);
+        shadowOf(RuntimeEnvironment.getApplication()).checkActivities(true);
+
+        rateThisApp.openStorePage(controller.get());
+
+        assertEquals(1, callback.yes);
+        assertTrue(rateThisApp.getOptOut());
+    }
+
+    @Test
+    public void openStorePage_nullActivity_doesNothing() {
+        RateThisApp rateThisApp = init(new Config());
+
+        rateThisApp.openStorePage(null);
+
+        assertNull(shadowOf(RuntimeEnvironment.getApplication()).getNextStartedActivity());
+        assertEquals(0, callback.yes);
+        assertFalse(rateThisApp.getOptOut());
+    }
+
+    // endregion
+
+    // region callback
+
     @Test
     public void withoutCallback_buttonsDoNotCrash() {
         givenState(0, 20);

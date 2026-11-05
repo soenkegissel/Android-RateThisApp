@@ -448,6 +448,27 @@ public class RateThisApp implements Callback {
         setOptOut(true);
     }
 
+    /**
+     * Open the store page of the app directly, without the dialog and without the In-App Review flow.
+     * Use this for your own "Rate" button (e.g. in the settings), because Google silently ignores
+     * the In-App Review flow once its quota is exhausted.<br>
+     * Opens the url of {@link Config#setUrl(String)} if set, otherwise the market url, and falls
+     * back to the web url if the market app is missing. Afterwards the rate dialog is no longer
+     * shown automatically and {@link Callback#onYesClicked()} is called.
+     * @param activity the current activity
+     */
+    public void openStorePage(FragmentActivity activity) {
+        if (activity == null) {
+            Log.e(TAG, "Activity is null. Cannot open store page.");
+            return;
+        }
+        final String appPackage = activity.getPackageName();
+        final String url = sConfig.getmUrl() != null ? sConfig.getmUrl() : getMarketURL(mMarket, appPackage);
+        launchIntent(activity, url, appPackage);
+        setOptOut(true);
+        notifyYes();
+    }
+
     private void notifyYes() {
         if (sCallback != null) {
             sCallback.onYesClicked();

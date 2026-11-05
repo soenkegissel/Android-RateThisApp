@@ -44,7 +44,7 @@ Add the dependency to your app's `build.gradle`:
 
 ```groovy
 dependencies {
-    implementation 'com.github.soenkegissel:Android-RateThisApp:2.1.1'
+    implementation 'com.github.soenkegissel:Android-RateThisApp:2.2.0'
 }
 ```
 
@@ -218,6 +218,24 @@ To stop showing the rate dialog, call:
 RateThisApp.getInstance(this).stopRateDialog();
 ```
 
+### "Rate" button (e.g. in the settings)
+
+For a button that the user taps on purpose, open the store page directly with `openStorePage()`.
+It skips the dialog and the In-App Review flow:
+
+```java
+findViewById(R.id.rate_button).setOnClickListener(v ->
+        RateThisApp.getInstance(this).openStorePage(this));
+```
+
+Don't use `showRateDialogIfNeeded(true)` for such a button on Google Play: Google silently ignores the
+In-App Review flow once its quota is exhausted, so after a few taps nothing happens at all.
+`openStorePage()` always opens the store page instead.
+
+`openStorePage()` uses the same url as "Rate now" (`config.setUrl()` if set, otherwise the market url,
+with the web url as fallback if the market app is missing). Afterwards the rate dialog is no longer
+shown automatically and `Callback.onYesClicked()` is called.
+
 ### Callback
 
 You can receive "Rate now", "No, thanks" and "Later" events. "Later" is also reported when the user
@@ -260,7 +278,7 @@ protected void onDestroy() {
 ```java
 RateThisApp rateThisApp = RateThisApp.getInstance(this);
 rateThisApp.getLaunchCount();      // launches since installation or the last "Later"
-rateThisApp.getOptOut();           // true if the user pressed "Rate now" or "No, thanks"
+rateThisApp.getOptOut();           // true after "Rate now", "No, thanks" or openStorePage()
 rateThisApp.getDialogShown();      // true if the dialog was shown at least once
 ```
 
